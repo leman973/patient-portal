@@ -16,6 +16,7 @@ function LayoutWithNavbar() {
     <>
       <Navbar />
       <Routes>
+        <Route path="/" element={<Navigate to="/Home" />} />
         <Route path="/home" element={<Home />} />
         <Route path="/doctors" element={<AllDoctors />} />
         <Route path="/doctors/:speciality" element={<AllDoctors />} />
@@ -37,6 +38,7 @@ function App() {
       {/* Routes WITH navbar */}
       <Route path="/*" element={<LayoutWithNavbar />} />
     </Routes>
+
   );
 }
 
