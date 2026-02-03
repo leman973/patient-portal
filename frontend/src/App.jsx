@@ -7,18 +7,36 @@ import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 
 import "./App.css";
+import AllDoctors from "./pages/AllDoctors";
+import Navbar from "./Components/Navbar";
+import Booking from "./pages/Booking";
+
+function LayoutWithNavbar() {
+  return (
+    <>
+      <Navbar />
+      <Routes>
+        <Route path="/home" element={<Home />} />
+        <Route path="/doctors" element={<AllDoctors />} />
+        <Route path="/doctors/:speciality" element={<AllDoctors />} />
+        <Route path="/bookings/:speciality" element={<Booking />}></Route>
+        <Route path="/bookings" element={<Booking />}></Route>
+      </Routes>
+    </>
+  );
+}
 
 function App() {
   return (
+    <Routes>
+      {/* Routes WITHOUT navbar */}
+      <Route path="/" element={<Navigate to="/login" />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<Signup />} />
 
-    <div className="App">
-      <Routes>
-        <Route path="/" element={<Navigate to="/login" />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/home" element={<Home />} />
-      </Routes>
-    </div>
+      {/* Routes WITH navbar */}
+      <Route path="/*" element={<LayoutWithNavbar />} />
+    </Routes>
   );
 }
 

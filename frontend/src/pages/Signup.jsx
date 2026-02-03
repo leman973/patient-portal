@@ -6,6 +6,10 @@ export default function Signup() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [age, setAge] = useState("");
+  const [gender, setGender] = useState("");
+  const [phone, setPhone] = useState("");
+
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const handleSubmit = (e) => {
@@ -76,6 +80,51 @@ export default function Signup() {
               />
             </div>
 
+            {/* Age */}
+            <div className="mb-3">
+              <label className="form-label fw-bold">Age</label>
+              <input
+                type="number"
+                className="form-control form-control-sm"
+                placeholder="Enter age"
+                value={age}
+                onChange={(e) => setAge(e.target.value)}
+                min="1"
+                max="120"
+                style={{ borderRadius: "8px" }}
+              />
+            </div>
+
+            {/* Gender */}
+            <div className="mb-3">
+              <label className="form-label fw-bold">Gender</label>
+              <select
+                className="form-select form-select-sm"
+                value={gender}
+                onChange={(e) => setGender(e.target.value)}
+                style={{ borderRadius: "8px" }}
+              >
+                <option value="">Select gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            {/* Mobile Number */}
+            <div className="mb-3">
+              <label className="form-label fw-bold">Phone Number</label>
+              <input
+                type="tel"
+                className="form-control form-control-sm"
+                placeholder="Enter 10-digit phone number"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                maxLength="10"
+                style={{ borderRadius: "8px" }}
+              />
+            </div>
+
             {/* Email */}
             <div className="mb-3">
               <label className="form-label fw-bold">Email Address</label>
@@ -88,6 +137,7 @@ export default function Signup() {
                 style={{ borderRadius: "8px" }}
               />
             </div>
+
 
             {/* Password */}
             <div className="mb-3">
@@ -102,7 +152,8 @@ export default function Signup() {
               />
             </div>
 
-            {/* Confirm Password */}
+
+            {/* Confirm Password
             <div className="mb-3">
               <label className="form-label fw-bold">Confirm Password</label>
               <input
@@ -113,7 +164,7 @@ export default function Signup() {
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 style={{ borderRadius: "8px" }}
               />
-            </div>
+            </div> */}
 
             {/* Button */}
             <button
