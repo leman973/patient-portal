@@ -1,5 +1,7 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import Navbar from "../Components/Navbar";
+import Footer from "../Components/Footer";
 
 // images
 import physician from "../assets/Physisian.png";
@@ -48,57 +50,10 @@ export default function Home() {
 
   return (
     <>
-      <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
-        <div className="container">
-          <Link className="navbar-brand fw-bold text-success" to="/">
-            🏥 CarePlus Clinic
-          </Link>
-
-          <div className="collapse navbar-collapse" id="navbarNav">
-            {/* Auth Buttons */}
-            <ul className="navbar-nav ms-auto align-items-center">
-              <li className="nav-item">
-                <Link className="nav-link text-success me-2 fw-bold" to="/home">
-                  Doctors
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link text-success me-2 fw-bold" to="/home">
-                  About Us
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link text-success me-2 fw-bold" to="/home">
-                  Contact Us
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link
-                  className="btn btn-info text-white fw-bold me-3"
-                  to="/login"
-                >
-                  Login
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link
-                  className="btn btn-info text-white fw-bold me-3"
-                  to="/signup"
-                >
-                  Register
-                </Link>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-
       {/* Hero Section */}
       <section
         className="text-white text-center py-5"
-        style={{
-          background: "linear-gradient(120deg, #198754, #20c997)",
-        }}
+        style={{ background: "linear-gradient(120deg, #198754, #20c997)" }}
       >
         <div className="container">
           <h1 className="fw-bold">Book Appointments Easily</h1>
@@ -110,7 +65,7 @@ export default function Home() {
           </p>
           <button
             className="btn btn-primary text-white btn-lg px-4"
-            onClick={() => navigate("/login")}
+            onClick={() => navigate("/bookings")}
           >
             Schedule Appointment
           </button>
@@ -128,20 +83,12 @@ export default function Home() {
             <div className="col-6 col-md-2 text-center" key={index}>
               <div
                 className="rounded-circle bg-white shadow d-flex align-items-center justify-content-center mx-auto"
-                style={{
-                  width: "120px",
-                  height: "120px",
-                  transition: "0.3s",
-                }}
+                style={{ width: "120px", height: "120px", transition: "0.3s" }}
               >
                 <img
                   src={item.icon}
                   alt={item.name}
-                  style={{
-                    width: "65%",
-                    height: "65%",
-                    objectFit: "contain",
-                  }}
+                  style={{ width: "65%", height: "65%", objectFit: "contain" }}
                 />
               </div>
               <p className="mt-3 fw-semibold">{item.name}</p>
@@ -159,52 +106,32 @@ export default function Home() {
             <div className="col-md-4" key={doc.id}>
               <div
                 className="card h-100 border-0 shadow-sm"
-                style={{
-                  transition: "0.3s",
-                  borderRadius: "15px",
-                }}
+                style={{ transition: "0.3s", borderRadius: "15px" }}
                 onMouseOver={(e) => {
                   e.currentTarget.style.transform = "translateY(-10px)";
-                  e.currentTarget.style.boxShadow =
-                    "0 12px 25px rgba(0,0,0,0.15)";
+                  e.currentTarget.style.boxShadow = "0 12px 25px rgba(0,0,0,0.15)";
                 }}
                 onMouseOut={(e) => {
                   e.currentTarget.style.transform = "translateY(0)";
-                  e.currentTarget.style.boxShadow =
-                    "0 4px 10px rgba(0,0,0,0.1)";
+                  e.currentTarget.style.boxShadow = "0 4px 10px rgba(0,0,0,0.1)";
                 }}
               >
                 <img
                   src={doc.image}
                   className="card-img-top"
                   alt={doc.name}
-                  style={{
-                    borderTopLeftRadius: "15px",
-                    borderTopRightRadius: "15px",
-                  }}
+                  style={{ borderTopLeftRadius: "15px", borderTopRightRadius: "15px" }}
                 />
                 <div className="card-body text-center">
                   <h5 className="card-title fw-bold">{doc.name}</h5>
                   <p className="text-muted mb-1">{doc.speciality}</p>
-                  <p className="text-muted small">
-                    Experience: {doc.experience}
-                  </p>
+                  <p className="text-muted small">Experience: {doc.experience}</p>
                 </div>
               </div>
             </div>
           ))}
         </div>
       </section>
-
-      {/* Redesigned Footer */}
-      <footer className="bg-light py-3 mt-4 border-top">
-        <div className="container text-center text-secondary">
-          <small>
-            © 2026 <strong>CarePlus Clinic</strong> | Patient Appointment &
-            Medical Records System | All Rights Reserved
-          </small>
-        </div>
-      </footer>
     </>
   );
 }

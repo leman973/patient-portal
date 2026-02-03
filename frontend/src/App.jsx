@@ -10,6 +10,7 @@ import "./App.css";
 import AllDoctors from "./pages/AllDoctors";
 import Navbar from "./Components/Navbar";
 import Booking from "./pages/Booking";
+import Footer from "./Components/Footer";
 
 function LayoutWithNavbar() {
   return (
@@ -23,6 +24,7 @@ function LayoutWithNavbar() {
         <Route path="/bookings/:speciality" element={<Booking />}></Route>
         <Route path="/bookings" element={<Booking />}></Route>
       </Routes>
+      <Footer />
     </>
   );
 }
