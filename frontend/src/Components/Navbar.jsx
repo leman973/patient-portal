@@ -13,12 +13,20 @@ export default function Navbar() {
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ms-auto align-items-center">
             <li className="nav-item">
-              <Link className="nav-link text-success me-2 fw-bold" to="/doctors">
+              <Link className="nav-link text-success me-2 fw-bold" to="/home">
+                Home
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link
+                className="nav-link text-success me-2 fw-bold"
+                to="/doctors"
+              >
                 Doctors
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link text-success me-2 fw-bold" to="/home">
+              <Link className="nav-link text-success me-2 fw-bold" to="/about">
                 About Us
               </Link>
             </li>
@@ -28,12 +36,18 @@ export default function Navbar() {
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="btn btn-info text-white fw-bold me-3" to="/login">
+              <Link
+                className="btn btn-info text-white fw-bold me-3"
+                to="/login"
+              >
                 Login
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="btn btn-info text-white fw-bold me-3" to="/signup">
+              <Link
+                className="btn btn-info text-white fw-bold me-3"
+                to="/signup"
+              >
                 Register
               </Link>
             </li>

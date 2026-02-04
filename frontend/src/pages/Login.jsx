@@ -3,7 +3,6 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 
-
 export default function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -123,16 +122,6 @@ export default function Login() {
         </div>
       </div>
 
-      {/* Footer */}
-      <footer
-        className="text-center py-2"
-        style={{
-          color: "#333",
-          fontWeight: "500",
-        }}
-      >
-        © 2026 Patient Portal | All Rights Reserved
-      </footer>
       <ToastContainer
         position="top-right"
         autoClose={3000}

@@ -138,7 +138,6 @@ export default function Signup() {
               />
             </div>
 
-
             {/* Password */}
             <div className="mb-3">
               <label className="form-label fw-bold">Password</label>
@@ -151,7 +150,6 @@ export default function Signup() {
                 style={{ borderRadius: "8px" }}
               />
             </div>
-
 
             {/* Confirm Password
             <div className="mb-3">
@@ -196,12 +194,6 @@ export default function Signup() {
       </div>
 
       {/* Footer */}
-      <footer
-        className="text-center py-2"
-        style={{ color: "#333", fontWeight: "500" }}
-      >
-        © 2026 Patient Portal | All Rights Reserved
-      </footer>
       <ToastContainer
         position="top-right"
         autoClose={3000}
