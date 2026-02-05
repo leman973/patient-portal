@@ -40,7 +40,7 @@ export default function AboutUs() {
       {/* ===== HERO SECTION ===== */}
       <section
         className="py-5 text-white"
-        style={{ background: "linear-gradient(120deg, #0d6efd, #20c997)" }}
+        style={{ background: "linear-gradient(120deg, #198754, #20c997)" }}
       >
         <div className="container text-center">
           <h1 className="fw-bold">About CarePlus Clinic</h1>

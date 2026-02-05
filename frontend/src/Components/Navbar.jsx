@@ -31,7 +31,10 @@ export default function Navbar() {
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link text-success me-2 fw-bold" to="/home">
+              <Link
+                className="nav-link text-success me-2 fw-bold"
+                to="/contact"
+              >
                 Contact Us
               </Link>
             </li>
