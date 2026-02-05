@@ -2,6 +2,8 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Home from "./pages/Home";
+import About from "./pages/About";
+import Contact from "./pages/Contact";
 import { useState } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
@@ -14,6 +16,7 @@ import Footer from "./Components/Footer";
 
 function LayoutWithNavbar() {
   return (
+<<<<<<< HEAD
     <div className="app-container">
       <Navbar />
       <main className="app-content">
@@ -26,6 +29,25 @@ function LayoutWithNavbar() {
           <Route path="/bookings" element={<Booking />} />
         </Routes>
       </main>
+=======
+    <div className="app-wrapper">
+      <Navbar />
+
+      <div className="content-wrapper">
+        <Routes>
+          <Route path="/" element={<Navigate to="/Home" />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/doctors" element={<AllDoctors />} />
+          <Route path="/doctors/:speciality" element={<AllDoctors />} />
+          <Route path="/bookings/:speciality" element={<Booking />}></Route>
+          <Route path="/bookings" element={<Booking />}></Route>
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+        </Routes>
+      </div>
+>>>>>>> feature/frontend-contact
       <Footer />
     </div>
   );
@@ -35,13 +57,16 @@ function App() {
   return (
     <Routes>
       {/* Routes WITHOUT navbar */}
+<<<<<<< HEAD
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
+=======
+      <Route path="/" element={<Navigate to="/home" />} />
+>>>>>>> feature/frontend-contact
 
       {/* Routes WITH navbar */}
       <Route path="/*" element={<LayoutWithNavbar />} />
     </Routes>
-
   );
 }
 
