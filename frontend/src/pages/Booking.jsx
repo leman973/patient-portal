@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
+import axios from "axios";
+import React, { useEffect, useState } from 'react';
 import { FaUser } from "react-icons/fa";
 import Card from 'react-bootstrap/Card';
 import Button from "react-bootstrap/Button";
 import doctors from "../data/doctors";
+import { useParams } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 const Booking = () => {
+    const navigate = useNavigate();
     const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     const monthsOfYear = [
         "January", "February", "March", "April", "May", "June",
@@ -26,6 +30,39 @@ const Booking = () => {
     const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
     const [selectedSpeciality, setSelectedSpeciality] = useState(null);
     const [selectedDoc, setSelectedDoc] = useState(null);
+
+    const { id } = useParams();
+    const doctor = doctors.find(doc => doc.id === Number(id));
+
+    useEffect(() => {
+        if (doctor?.batch?.length) {
+            setSelectedBatch(doctor.batch[0]);
+            setSelectedSpeciality(doctor.speciality)
+            setSelectedDoc(doctor)
+        }
+    }, [doctor]);
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+            navigate("/login");
+            return;
+        }
+
+        axios.get("http://localhost:8080/api/bookings", {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+            .catch(err => {
+                if (err.response && (err.response.status === 401 || err.response.status === 403)) {
+                    navigate("/login"); // redirect if not authorized
+                } else {
+                    console.error(err);
+                }
+            });
+    }, []);
 
     // Generate next N days
     function generateNextDays(n) {
@@ -66,99 +103,113 @@ const Booking = () => {
         Evening: generateSlots(5, "PM"),
     };
 
-    const filteredDoctors = selectedSpeciality
-        ? doctors.filter(doc => doc.speciality === selectedSpeciality)
+    const filteredDoctors = selectedSpeciality && selectedBatch
+        ? doctors.filter(doc => (doc.speciality === selectedSpeciality && doc.batch.includes(selectedBatch)))
         : [];
     const doctorsToShow = selectedDoc ? [selectedDoc] : filteredDoctors;
 
     return (
-        <div className='container my-3'>
+        <div className='container my-3 d-flex flex-column justify-content-around'>
             {/* User Info Card */}
-            <h4 className="mb-3">Your Info</h4>
-            <div className="d-flex flex-wrap align-items-center justify-content-between p-3 border rounded shadow-sm mb-4">
-                <div className="d-flex align-items-center gap-3">
-                    <div className="d-flex align-items-center justify-content-center rounded-circle bg-success text-white"
-                        style={{ width: "55px", height: "55px" }}>
-                        <FaUser size={24} />
+            <div className='d-flex flex-column flex-lg-row align-items-center align-items-lg-start gap-3 gap-lg-5 py-3 px-2 p-md-4 border rounded-4 shadow-sm bg-white mb-4'>
+                <h4 className="mb-2 mb-lg-0">Your Info</h4>
+                <div className="d-flex align-items-center justify-content-between p-3 border rounded shadow-sm mb-4 w-100">
+                    <div className="d-flex align-items-center gap-3">
+                        <div className="d-flex align-items-center justify-content-center rounded-circle bg-success text-white"
+                            style={{ width: "55px", height: "55px" }}>
+                            <FaUser size={24} />
+                        </div>
+                        <div>
+                            <h6 className="mb-1 fw-bold">John Doe, <span className="text-muted">23, Male</span></h6>
+                            <small className="text-muted">+1 345 678 901</small>
+                        </div>
                     </div>
-                    <div>
-                        <h6 className="mb-1 fw-bold">John Doe, <span className="text-muted">23, Male</span></h6>
-                        <small className="text-muted">+1 345 678 901</small>
-                    </div>
+                    <Button variant="outline-danger" size="sm">Edit Profile</Button>
                 </div>
-                <Button variant="outline-danger" size="sm">Edit Profile</Button>
             </div>
 
             {/* Date Selection */}
-            <h4 className="mb-3">Select Date</h4>
-            <div className='d-flex flex-wrap gap-2 justify-content-center justify-content-lg-start mb-4'>
-                {slots.map((slot, index) => (
-                    <Button
-                        key={index}
-                        onClick={() => setSelectedSlot(index)}
-                        variant={selectedSlot === index ? "primary" : "outline-primary"}
-                        className='px-3 py-2 rounded-pill fw-semibold shadow-sm'
-                        style={{ minWidth: "120px" }}
-                    >
-                        <div style={{ fontSize: "0.85rem" }}>{slot.dayName}</div>
-                        <div style={{ fontSize: "1rem", fontWeight: "600" }}>
-                            {slot.date} {slot.monthName}
-                        </div>
-                    </Button>
-                ))}
+            <div className='d-flex flex-column flex-lg-row align-items-center align-items-lg-start gap-3 gap-lg-5 p-3 p-md-4 border rounded-4 shadow-sm bg-white mb-4'>
+                <h4 className="mb-2 mb-lg-0">Select Date</h4>
+                <div className='d-flex flex-wrap gap-2 justify-content-center justify-content-lg-start mb-4'>
+                    {slots.map((slot, index) => (
+                        <Button
+                            key={index}
+                            onClick={() => setSelectedSlot(index)}
+                            variant={selectedSlot === index ? "primary" : "outline-primary"}
+                            className='px-3 py-2 rounded-pill fw-semibold shadow-sm'
+                            style={{ minWidth: "120px" }}
+                        >
+                            <div style={{ fontSize: "0.85rem" }}>{slot.dayName}</div>
+                            <div style={{ fontSize: "1rem", fontWeight: "600" }}>
+                                {slot.date} {slot.monthName}
+                            </div>
+                        </Button>
+                    ))}
+                </div>
             </div>
+
 
             {/* Time Batches */}
-            <h4 className="mb-3">Select Time</h4>
-            <div className="d-flex flex-wrap gap-3 justify-content-center mb-3">
-                {Object.keys(batches).map((batch) => (
-                    <Button
-                        key={batch}
-                        onClick={() => { setSelectedBatch(batch); setSelectedTimeSlot(null); }}
-                        variant={selectedBatch === batch ? "primary" : "outline-primary"}
-                        className='px-4 py-2 rounded-pill fw-semibold'
-                        style={{ minWidth: "120px" }}
-                    >
-                        {batch}
-                    </Button>
-                ))}
-            </div>
+            <div className='d-flex flex-column flex-lg-row align-items-center align-items-lg-start gap-3 gap-lg-5 p-3 p-md-4 border rounded-4 shadow-sm bg-white mb-4'>
+                <h4 className="mb-2 mb-lg-0">Select Time</h4>
+                <div>
+                    <div className="d-flex flex-wrap gap-3   justify-content-center justify-content-md-start mb-3">
+                        {Object.keys(batches).map((batch) => (
+                            <Button
+                                key={batch}
+                                disabled={doctor ? !doctor.batch.includes(batch) : null}
+                                onClick={() => { setSelectedBatch(batch); setSelectedTimeSlot(null); setSelectedDoc(null) }}
+                                variant={selectedBatch === batch ? "primary" : "outline-primary"}
+                                className='px-4 py-2 rounded-pill fw-semibold'
+                                style={{ minWidth: "120px" }}
+                            >
+                                {batch}
+                            </Button>
+                        ))}
+                    </div>
 
-            {/* Time Slots */}
-            <div className="d-flex flex-wrap gap-3 justify-content-center mb-4">
-                {batches[selectedBatch].map((slot, index) => (
-                    <Button
-                        key={index}
-                        onClick={() => setSelectedTimeSlot(slot)}
-                        variant={selectedTimeSlot === slot ? "success" : "outline-success"}
-                        className='px-3 py-2 rounded-3 fw-medium'
-                        style={{ minWidth: "140px" }}
-                    >
-                        {slot}
-                    </Button>
-                ))}
+
+                    {/* Time Slots */}
+                    <div className="d-flex flex-wrap gap-3 justify-content-center mb-4">
+                        {batches[selectedBatch].map((slot, index) => (
+                            <Button
+                                key={index}
+                                onClick={() => setSelectedTimeSlot(slot)}
+                                variant={selectedTimeSlot === slot ? "success" : "outline-success"}
+                                className='px-3 py-2 rounded-3 fw-medium'
+                                style={{ minWidth: "140px" }}
+                            >
+                                {slot}
+                            </Button>
+                        ))}
+                    </div>
+                </div>
             </div>
 
             {/* Speciality Selection */}
-            <h4 className="mb-3">Select Speciality</h4>
-            <div className="d-flex flex-wrap gap-3 mb-4 justify-content-center justify-content-lg-start">
-                {specialities.map((spec, index) => (
-                    <Button
-                        key={index}
-                        variant={selectedSpeciality === spec ? "primary" : "outline-primary"}
-                        className='px-3 py-2 rounded-pill'
-                        style={{ minWidth: "150px" }}
-                        onClick={() => { setSelectedSpeciality(spec); setSelectedDoc(null); }}
-                    >
-                        {spec}
-                    </Button>
-                ))}
+            <div className='d-flex flex-column flex-lg-row align-items-center align-items-lg-start gap-3 gap-lg-5 p-3 p-md-4 border rounded-4 shadow-sm bg-white mb-4'>
+                <h4 className="mb-3">Select Speciality</h4>
+                <div className="d-flex flex-wrap gap-3 mb-4 justify-content-center justify-content-lg-start">
+                    {specialities.map((spec, index) => (
+                        <Button
+                            key={index}
+                            disabled={doctor ? doctor.speciality !== spec : null}
+                            variant={selectedSpeciality === spec ? "primary" : "outline-primary"}
+                            className='px-3 py-2 rounded-pill'
+                            style={{ minWidth: "150px" }}
+                            onClick={() => { setSelectedSpeciality(spec); setSelectedDoc(null); }}
+                        >
+                            {spec}
+                        </Button>
+                    ))}
+                </div>
             </div>
 
             {/* Doctors List */}
             <div className="d-flex flex-wrap gap-3 justify-content-center justify-content-md-start mb-4">
                 {filteredDoctors.length === 0 && selectedSpeciality && (
-                    <p className="text-muted w-100 text-center">No doctors available for this speciality</p>
+                    <p className="text-muted w-100 text-center">No doctors available for this speciality and batch</p>
                 )}
                 {filteredDoctors.length === 0 && !selectedSpeciality && (
                     <p className="text-muted w-100 text-center">Select speciality to view available doctors</p>

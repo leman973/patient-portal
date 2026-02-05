@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -9,7 +10,7 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!email || !password) {
@@ -17,8 +18,23 @@ export default function Login() {
       return;
     }
 
-    console.log("Email:", email, "Password:", password);
-    toast.success(" Login successful!");
+    try {
+      const res = await axios.post("http://localhost:8080/api/auth/login", {
+        email,
+        password
+      })
+      const data = res.data;
+      const token = data.jwtToken;
+      localStorage.setItem("token", token);
+      localStorage.setItem("userId", data.userId);
+
+
+      toast.success(res.data.message || "Login successful");
+      navigate("/home");
+    } catch (error) {
+      const message = error.response?.data?.message || "Login Failed please try again";
+      toast.error(message);
+    }
   };
 
   return (

@@ -14,18 +14,20 @@ import Footer from "./Components/Footer";
 
 function LayoutWithNavbar() {
   return (
-    <>
+    <div className="app-container">
       <Navbar />
-      <Routes>
-        <Route path="/" element={<Navigate to="/Home" />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/doctors" element={<AllDoctors />} />
-        <Route path="/doctors/:speciality" element={<AllDoctors />} />
-        <Route path="/bookings/:speciality" element={<Booking />}></Route>
-        <Route path="/bookings" element={<Booking />}></Route>
-      </Routes>
+      <main className="app-content">
+        <Routes>
+          <Route path="/" element={<Navigate to="/home" />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/doctors" element={<AllDoctors />} />
+          <Route path="/doctors/:speciality" element={<AllDoctors />} />
+          <Route path="/bookings/:id" element={<Booking />} />
+          <Route path="/bookings" element={<Booking />} />
+        </Routes>
+      </main>
       <Footer />
-    </>
+    </div>
   );
 }
 
@@ -33,7 +35,6 @@ function App() {
   return (
     <Routes>
       {/* Routes WITHOUT navbar */}
-      <Route path="/" element={<Navigate to="/login" />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
 

@@ -1,8 +1,11 @@
+import axios from "axios";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function Signup() {
+  const navigate = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -10,13 +13,11 @@ export default function Signup() {
   const [gender, setGender] = useState("");
   const [phone, setPhone] = useState("");
 
-  const [confirmPassword, setConfirmPassword] = useState("");
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
 
     // Frontend validations
-    if (!name || !email || !password || !confirmPassword) {
+    if (!name || !email || !password || !age || !gender || !phone) {
       toast.error("Please fill in all fields!");
       return;
     }
@@ -26,19 +27,22 @@ export default function Signup() {
       return;
     }
 
-    if (password !== confirmPassword) {
-      toast.error("Passwords do not match!");
-      return;
+    try {
+      const res = await axios.post("http://localhost:8080/api/auth/signup",{
+        name,
+        email,
+        password,
+        age,
+        gender,
+        phone,
+      });
+
+      toast.success(res.data.message || "Registration successful");
+      navigate("/login"); 
+    } catch (error) {
+      const message = error.response?.data?.message || "Signup Failed please try again";
+      toast.error(message);
     }
-
-    // Placeholder for backend API call
-    console.log({
-      name,
-      email,
-      password,
-    });
-
-    toast.success("Registration successful!");
   };
 
   return (

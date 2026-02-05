@@ -7,6 +7,7 @@ const doctors = [
     experience: "10 Years",
     qualification: "MBBS, MD",
     charge: 500,
+    batch: ["Morning", "Afternoon"],
     image: "https://static.vecteezy.com/system/resources/thumbnails/026/375/249/small/ai-generative-portrait-of-confident-male-doctor-in-white-coat-and-stethoscope-standing-with-arms-crossed-and-looking-at-camera-photo.jpg"
   },
   {
@@ -16,6 +17,7 @@ const doctors = [
     experience: "12 Years",
     qualification: "MBBS, MS",
     charge: 800,
+    batch: ["Evening"],
     image: "https://static.vecteezy.com/system/resources/thumbnails/026/375/249/small/ai-generative-portrait-of-confident-male-doctor-in-white-coat-and-stethoscope-standing-with-arms-crossed-and-looking-at-camera-photo.jpg"
   },
   {
@@ -25,6 +27,7 @@ const doctors = [
     experience: "8 Years",
     qualification: "MBBS, DDV",
     charge: 700,
+    batch: ["Afternoon"],
     image: "https://static.vecteezy.com/system/resources/thumbnails/026/375/249/small/ai-generative-portrait-of-confident-male-doctor-in-white-coat-and-stethoscope-standing-with-arms-crossed-and-looking-at-camera-photo.jpg"
   },
   {
@@ -34,6 +37,7 @@ const doctors = [
     experience: "7 Years",
     qualification: "MBBS, MD Pediatrics",
     charge: 600,
+    batch: ["Morning"],
     image: "https://static.vecteezy.com/system/resources/thumbnails/026/375/249/small/ai-generative-portrait-of-confident-male-doctor-in-white-coat-and-stethoscope-standing-with-arms-crossed-and-looking-at-camera-photo.jpg"
   },
   {
@@ -43,6 +47,7 @@ const doctors = [
     experience: "15 Years",
     qualification: "MBBS, DM Neurology",
     charge: 1200,
+    batch: ["Morning", "Evening"],
     image: "https://static.vecteezy.com/system/resources/thumbnails/026/375/249/small/ai-generative-portrait-of-confident-male-doctor-in-white-coat-and-stethoscope-standing-with-arms-crossed-and-looking-at-camera-photo.jpg"
   },
   {
@@ -52,6 +57,7 @@ const doctors = [
     experience: "9 Years",
     qualification: "MBBS, MD Gastroenterology",
     charge: 900,
+    batch: ["Afternoon", "Evening"],
     image: "https://static.vecteezy.com/system/resources/thumbnails/026/375/249/small/ai-generative-portrait-of-confident-male-doctor-in-white-coat-and-stethoscope-standing-with-arms-crossed-and-looking-at-camera-photo.jpg"
   },
   {
@@ -61,6 +67,7 @@ const doctors = [
     experience: "5 Years",
     qualification: "MBBS",
     charge: 400,
+    batch: ["Morning"],
     image: "https://static.vecteezy.com/system/resources/thumbnails/026/375/249/small/ai-generative-portrait-of-confident-male-doctor-in-white-coat-and-stethoscope-standing-with-arms-crossed-and-looking-at-camera-photo.jpg"
   },
   {
@@ -70,6 +77,7 @@ const doctors = [
     experience: "11 Years",
     qualification: "MBBS, MS",
     charge: 750,
+    batch: ["Morning", "Afternoon"],
     image: "https://static.vecteezy.com/system/resources/thumbnails/026/375/249/small/ai-generative-portrait-of-confident-male-doctor-in-white-coat-and-stethoscope-standing-with-arms-crossed-and-looking-at-camera-photo.jpg"
   }
 ];

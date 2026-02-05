@@ -103,7 +103,7 @@ const AllDoctors = () => {
 
                                         <button
                                             className="btn btn-outline-success mt-2"
-                                            onClick={() => navigate("/login")}
+                                            onClick={() => navigate(`/bookings/${doc.id}`)}
                                         >
                                             Schedule Appointment
                                         </button>
