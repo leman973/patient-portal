@@ -16,7 +16,9 @@ body,
 }
 
 /* OUTER CONTAINER */
-html, body, #root {
+html,
+body,
+#root {
   height: 100%;
   margin: 0;
 }
@@ -80,4 +82,12 @@ html, body, #root {
 }
 .bg-soft-green {
   background: #f0fdf4; /* very light mint */
+}
+.appointment-card {
+  transition: all 0.3s ease;
+}
+
+.appointment-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.12);
 }

@@ -109,23 +109,30 @@ export default function Home() {
                 style={{ transition: "0.3s", borderRadius: "15px" }}
                 onMouseOver={(e) => {
                   e.currentTarget.style.transform = "translateY(-10px)";
-                  e.currentTarget.style.boxShadow = "0 12px 25px rgba(0,0,0,0.15)";
+                  e.currentTarget.style.boxShadow =
+                    "0 12px 25px rgba(0,0,0,0.15)";
                 }}
                 onMouseOut={(e) => {
                   e.currentTarget.style.transform = "translateY(0)";
-                  e.currentTarget.style.boxShadow = "0 4px 10px rgba(0,0,0,0.1)";
+                  e.currentTarget.style.boxShadow =
+                    "0 4px 10px rgba(0,0,0,0.1)";
                 }}
               >
                 <img
                   src={doc.image}
                   className="card-img-top"
                   alt={doc.name}
-                  style={{ borderTopLeftRadius: "15px", borderTopRightRadius: "15px" }}
+                  style={{
+                    borderTopLeftRadius: "15px",
+                    borderTopRightRadius: "15px",
+                  }}
                 />
                 <div className="card-body text-center">
                   <h5 className="card-title fw-bold">{doc.name}</h5>
                   <p className="text-muted mb-1">{doc.speciality}</p>
-                  <p className="text-muted small">Experience: {doc.experience}</p>
+                  <p className="text-muted small">
+                    Experience: {doc.experience}
+                  </p>
                 </div>
               </div>
             </div>
