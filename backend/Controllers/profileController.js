@@ -11,7 +11,6 @@ const getUserDetail = async (req, res) => {
     }
 }
 
-// ✅ RECOMMENDED FOR YOUR USE CASE
 const updateProfile = async (req, res) => {
     try {
         const userId = req.userId;
@@ -25,8 +24,8 @@ const updateProfile = async (req, res) => {
             const result = await cloudinary.uploader.upload(dataURI, {
                 folder: "avatars",
                 transformation: [
-                    { width: 500, height: 500, crop: "limit" }, // Resize
-                    { quality: "auto" } // Auto optimize
+                    { width: 500, height: 500, crop: "limit" },
+                    { quality: "auto" } 
                 ]
             });
 

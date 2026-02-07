@@ -1,4 +1,3 @@
-// src/data/doctors.js
 const doctors = [
   {
     id: 1,

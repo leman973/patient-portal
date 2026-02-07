@@ -6,6 +6,7 @@ import Button from "react-bootstrap/Button";
 import doctors from "../data/doctors";
 import { useParams } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
+import Loader from "../Components/Loader";
 
 const Booking = () => {
     const navigate = useNavigate();
@@ -23,13 +24,15 @@ const Booking = () => {
         "Gastroentrologist"
     ];
 
-    const slots = generateNextDays(7);
 
     const [selectedSlot, setSelectedSlot] = useState(null);
     const [selectedBatch, setSelectedBatch] = useState("Morning");
     const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
     const [selectedSpeciality, setSelectedSpeciality] = useState(null);
     const [selectedDoc, setSelectedDoc] = useState(null);
+
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     const { id } = useParams();
     const doctor = doctors.find(doc => doc.id === Number(id));
@@ -50,18 +53,25 @@ const Booking = () => {
             return;
         }
 
-        axios.get("http://localhost:8080/api/bookings", {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        })
-            .catch(err => {
+        const fetchUser = async () => {
+            try {
+                const res = await axios.get("http://localhost:8080/api/bookings", {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                })
+                setUser(res.data);
+                setLoading(false);
+            } catch (error) {
                 if (err.response && (err.response.status === 401 || err.response.status === 403)) {
-                    navigate("/login"); // redirect if not authorized
+                    navigate("/login"); 
                 } else {
                     console.error(err);
+                    setLoading(false);
                 }
-            });
+            }
+        }
+        fetchUser();
     }, []);
 
     // Generate next N days
@@ -97,6 +107,7 @@ const Booking = () => {
         return slots;
     };
 
+    const slots = generateNextDays(7);
     const batches = {
         Morning: generateSlots(9, "AM"),
         Afternoon: generateSlots(2, "PM"),
@@ -108,6 +119,8 @@ const Booking = () => {
         : [];
     const doctorsToShow = selectedDoc ? [selectedDoc] : filteredDoctors;
 
+    if (loading) return <Loader />;
+
     return (
         <div className='container my-3 d-flex flex-column justify-content-around'>
             {/* User Info Card */}
@@ -115,16 +128,21 @@ const Booking = () => {
                 <h4 className="mb-2 mb-lg-0">Your Info</h4>
                 <div className="d-flex align-items-center justify-content-between p-3 border rounded shadow-sm mb-4 w-100">
                     <div className="d-flex align-items-center gap-3">
-                        <div className="d-flex align-items-center justify-content-center rounded-circle bg-success text-white"
+                        {user.avatar ? (<img
+                            src={user.avatar}
+                            alt="Profile"
+                            className="rounded-circle"
+                            style={{ width: "55px", height: "55px", objectFit: "cover" }}
+                        />) : (<div className="d-flex align-items-center justify-content-center rounded-circle bg-success text-white"
                             style={{ width: "55px", height: "55px" }}>
                             <FaUser size={24} />
-                        </div>
+                        </div>)}
                         <div>
-                            <h6 className="mb-1 fw-bold">John Doe, <span className="text-muted">23, Male</span></h6>
-                            <small className="text-muted">+1 345 678 901</small>
+                            <h6 className="mb-1 fw-bold">{user.name}, <span className="text-muted">{user.age}, {user.gender}</span></h6>
+                            <small className="text-muted">{user.phone}</small>
                         </div>
                     </div>
-                    <Button variant="outline-danger" size="sm">Edit Profile</Button>
+                    <Button onClick={() => navigate("/profile")} variant="outline-danger" size="sm">Edit Profile</Button>
                 </div>
             </div>
 

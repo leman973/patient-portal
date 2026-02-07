@@ -155,19 +155,6 @@ export default function Signup() {
               />
             </div>
 
-            {/* Confirm Password
-            <div className="mb-3">
-              <label className="form-label fw-bold">Confirm Password</label>
-              <input
-                type="password"
-                className="form-control form-control-sm"
-                placeholder="Re-enter password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                style={{ borderRadius: "8px" }}
-              />
-            </div> */}
-
             {/* Button */}
             <button
               type="submit"

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import axios from "axios";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -10,42 +11,55 @@ const Contact = () => {
   });
 
   const [showToast, setShowToast] = useState(false);
+  const [loading, setLoading] = useState(false);
+
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    const token = localStorage.getItem("token");
 
-    // Check mandatory fields
-    const isValid = Object.values(formData).every(
-      (value) => value.trim() !== "",
-    );
+    setLoading(true);
+    try {
+      const res = await axios.post(
+        "http://localhost:8080/api/contact",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setLoading(false);
 
-    if (!isValid) {
-      alert("Please fill all the fields.");
-      return;
+      if (res.data.success) {
+        setShowToast(true);
+
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          subject: "",
+          message: "",
+        });
+      };
+
+      setTimeout(() => setShowToast(false), 3000);
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+
+      alert(
+        error.response?.data?.message || "Something Went wrong"
+      );
     }
-
-    // Show toast
-    setShowToast(true);
-
-    // Reset form
-    setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      subject: "",
-      message: "",
-    });
-
-    // Auto-hide toast
-    setTimeout(() => setShowToast(false), 3000);
   };
 
   return (
-    <div className="vh-100 d-flex align-items-center bg-light position-relative">
+    <div className="d-flex flex-column flex-grow-1 align-items-center bg-light position-relative py-4">
       {/* Toast */}
       {showToast && (
         <div className="toast show position-absolute bottom-0 end-0 m-4 mb-5">
@@ -187,8 +201,20 @@ const Contact = () => {
                     <button
                       type="submit"
                       className="btn btn-success mt-4 px-4 py-2 fw-bold"
+                      disabled={loading}
                     >
-                      Send Message
+                      {loading ? (
+                        <>
+                          <span
+                            className="spinner-border spinner-border-sm me-2"
+                            role="status"
+                            aria-hidden="true"
+                          ></span>
+                          Sending...
+                        </>
+                      ) : (
+                        "Send Message"
+                      )}
                     </button>
                   </div>
                 </form>

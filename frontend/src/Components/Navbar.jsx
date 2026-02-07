@@ -8,28 +8,20 @@ export default function Navbar() {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
   useEffect(() => {
-    console.log("In UseEffect")
     const token = localStorage.getItem("token");
-    console.log(`token is ${token}`)
     if (!token) return;
 
     const fetchUserDetails = async () => {
       try {
-        console.log("In fetch function")
-        console.log(`token in the function is ${token}`)
         const res = await axios.get("http://localhost:8080/api/me", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-        console.log(res.data)
-        // Backend returns: { name, email, avatar }
         setUser(res.data);
 
       } catch (error) {
         console.error("Failed to fetch user details", error);
-        // localStorage.removeItem("token");
-        console.log("Token Removed and in error")
       }
 
     };

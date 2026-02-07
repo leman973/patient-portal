@@ -8,6 +8,7 @@ const authRouter = require("./Routes/authRouter")
 const BookingRouter = require("./Routes/BookingRouter")
 const userDetailsRouter = require("./Routes/userDetailsRouter")
 const profileRouter = require("./Routes/profileRouter")
+const ContactRouter = require("./Routes/ContactRouter")
 const connectCloudinary = require('./config/cloudinary');
 const errorHandler = require('./Middlewares/errorHandler');
 
@@ -23,6 +24,7 @@ app.use('/api/auth',authRouter)
 app.use('/api/bookings',BookingRouter)
 app.use('/api/me',userDetailsRouter)
 app.use('/api/profile',profileRouter)
+app.use('/api/contact',ContactRouter)
 
 app.use(errorHandler)
 

@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import axios from "axios";
 import { FaUser } from "react-icons/fa";
+import Loader from '../Components/Loader';
+import Spinner from "react-bootstrap/Spinner";
 
 const Profile = () => {
     const [user, setUser] = useState(null);
+    const [editLoading, setEditLoading] = useState(false);
     const [loading, setLoading] = useState(true);
     const [editMode, setEditMode] = useState(false);
     const [formData, setFormData] = useState({
@@ -44,6 +47,7 @@ const Profile = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setEditLoading(true);
         try {
             const token = localStorage.getItem('token');
             const dataToSend = new FormData();
@@ -58,15 +62,17 @@ const Profile = () => {
                 headers: { Authorization: `Bearer ${token}` },
             });
             setUser(res.data);
+            setEditLoading(false);
             setEditMode(false);
             alert("Profile updated successfully!");
         } catch (error) {
+            setEditLoading(false);
             console.error(error);
             alert("Failed to update profile");
         }
     }
 
-    if (loading) return <p>Loading profile...</p>;
+    if (loading) return <Loader />;
     if (!user) return <p>No user found.</p>;
 
     return (
@@ -150,7 +156,12 @@ const Profile = () => {
 
                     {editMode ? (
                         <div className="d-flex gap-2">
-                            <button className='btn btn-primary btn-sm' onClick={handleSubmit}>Save</button>
+                            <button className='btn btn-primary btn-sm' onClick={handleSubmit}>{editLoading ? (<><span
+                                className="spinner-border spinner-border-sm me-2"
+                                role="status"
+                                aria-hidden="true"
+                            ></span>
+                                Saving...</>) : ("Save")}</button>
                             <button className='btn btn-secondary btn-sm' onClick={() => setEditMode(false)}>Cancel</button>
                         </div>
                     ) : (
