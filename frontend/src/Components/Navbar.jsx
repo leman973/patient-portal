@@ -149,7 +149,7 @@ export default function Navbar() {
                 </Link>
               </li>
               <li>
-                <Link className="dropdown-item" to="/bookings">
+                <Link className="dropdown-item" to="/my-appointments">
                   My Bookings
                 </Link>
               </li>
