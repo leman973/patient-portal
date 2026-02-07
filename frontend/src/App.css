@@ -11,12 +11,22 @@ body,
   flex-direction: column;
 }
 
+.dropdown-item:hover,
+.dropdown-item:focus {
+  background-color: #bebebe !important;
+  /* White text */
+  transition: background-color 0.2s ease;
+}
+
+
 .content-wrapper {
   flex: 1;
 }
 
 /* OUTER CONTAINER */
-html, body, #root {
+html,
+body,
+#root {
   height: 100%;
   margin: 0;
 }
@@ -24,11 +34,13 @@ html, body, #root {
 .app-container {
   display: flex;
   flex-direction: column;
-  min-height: 100vh; /* Full viewport height */
+  min-height: 100vh;
+  /* Full viewport height */
 }
 
 .app-content {
-  flex: 1; /* takes all remaining space */
+  flex: 1;
+  /* takes all remaining space */
 }
 
 .reviews-wrapper {
@@ -39,7 +51,8 @@ html, body, #root {
 
 /* MOVING ROW */
 .reviews-track {
-  display: flex; /* FORCE HORIZONTAL */
+  display: flex;
+  /* FORCE HORIZONTAL */
   flex-direction: row;
   width: max-content;
   animation: scroll-left 25s linear infinite;
@@ -47,14 +60,16 @@ html, body, #root {
 
 /* INDIVIDUAL CARD */
 .review-card {
-  min-width: 320px; /* FIXED WIDTH = horizontal */
+  min-width: 320px;
+  /* FIXED WIDTH = horizontal */
   max-width: 320px;
   margin: 0 15px;
   background: #ffffff;
   border-radius: 15px;
   padding: 20px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-  flex-shrink: 0; /* VERY IMPORTANT */
+  flex-shrink: 0;
+  /* VERY IMPORTANT */
 }
 
 /* TEXT */
@@ -74,10 +89,13 @@ html, body, #root {
   0% {
     transform: translateX(0);
   }
+
   100% {
     transform: translateX(-50%);
   }
 }
+
 .bg-soft-green {
-  background: #f0fdf4; /* very light mint */
+  background: #f0fdf4;
+  /* very light mint */
 }

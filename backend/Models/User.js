@@ -14,9 +14,6 @@ const userSchema = new mongoose.Schema({
         enum: ["Male", "Female", "Other"],
     },
     phone: {
-
-    },
-    phone: {
         type: String,
         unique: true,
     },
@@ -29,9 +26,14 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    role: {
+        type: String,
+        enum: ["NORMAL", "ADMIN"],
+        default: "NORMAL",
+    },
     avatar: {
         type: String,
-        default: "",  
+        default: "",
     },
 })
 

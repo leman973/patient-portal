@@ -46,7 +46,6 @@ const login = async (req, res) => {
             process.env.JWT_SECRET,
             { expiresIn: '24h' }
         )
-        console.log("TOKEN SENT TO FRONTEND:", jwtToken);
 
         res.status(200)
             .json({

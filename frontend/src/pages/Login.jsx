@@ -25,8 +25,6 @@ export default function Login() {
       const data = res.data;
       const token = data.jwtToken;
       localStorage.setItem("token", token);
-      localStorage.setItem("userId", data.userId);
-
 
       toast.success(res.data.message || "Login successful");
       navigate("/home");
@@ -123,7 +121,7 @@ export default function Login() {
           </form>
 
           <p className="text-center mt-3" style={{ color: "#555" }}>
-            Don’t have an account?{" "}
+            Don't have an account?{" "}
             <a href="/signup" style={{ color: "#4CAF50", fontWeight: "bold" }}>
               Signup
             </a>

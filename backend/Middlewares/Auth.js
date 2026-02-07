@@ -7,10 +7,8 @@ const ensureAuthenticated = (req, res, next) => {
             .json({ message: "Unathorized jwt token is required" });
     }
     try {
-        console.log("AUTH HEADER:", req.headers.authorization);
         const token = auth.split(" ")[1];
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        console.log("TOKEN RECEIVED IN MIDDLEWARE:", token);
         req.user = decoded;
         req.userId = decoded.userId;
         next();
