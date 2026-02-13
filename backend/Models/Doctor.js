@@ -5,16 +5,15 @@ const doctorSchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
-      trim: true,
     },
 
-    speciality: {
+    mobile: {
       type: String,
       required: true,
     },
 
-    experience: {
-      type: Number, 
+    specialist: {
+      type: String,
       required: true,
     },
 
@@ -23,39 +22,20 @@ const doctorSchema = new mongoose.Schema(
       required: true,
     },
 
-    charge: {
+    experience: {
       type: Number,
       required: true,
     },
 
-    batch: {
-      type: [String],
-      enum: ["Morning", "Afternoon", "Evening"],
-      required: true,
-    },
-
-    image: {
-      type: String,
-      default: "",
-    },
-
-    email: {
-      type: String,
-      required: true,
-      unique: true,
-      lowercase: true,
-    },
-
-    password: {
+    address: {
       type: String,
       required: true,
     },
   },
-  {
-    timestamps: true, 
-  }
+  { timestamps: true },
 );
 
-const doctorModel = mongoose.models.Doctor || mongoose.model("Doctor", doctorSchema);
+const doctorModel =
+  mongoose.models.Doctor || mongoose.model("Doctor", doctorSchema);
 
 module.exports = doctorModel;

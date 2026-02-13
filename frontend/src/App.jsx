@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Profile from "./pages/Profile";
+import Doctors_Records from "./pages/Doctors_Records";
 import MyAppointments from "./pages/MyAppointments";
 import { useState } from "react";
 import reactLogo from "./assets/react.svg";
@@ -31,6 +32,7 @@ function LayoutWithNavbar() {
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/doctors_records" element={<Doctors_Records />} />
           <Route path="/my-appointments" element={<MyAppointments />} />
         </Routes>
       </main>
@@ -46,6 +48,7 @@ function App() {
       {/* Routes WITHOUT navbar */}
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
+      <Route path="/doctors_records" element={<Doctors_Records />} />
 
       {/* Routes WITH navbar */}
       <Route path="/*" element={<LayoutWithNavbar />} />
