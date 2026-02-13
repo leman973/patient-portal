@@ -32,7 +32,7 @@ function LayoutWithNavbar() {
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/doctors_records" element={<Doctors_Records />} />
+          <Route path="/admin/doctors_records" element={<Doctors_Records />} />
           <Route path="/my-appointments" element={<MyAppointments />} />
         </Routes>
       </main>

@@ -3,8 +3,10 @@ import axios from "axios";
 import { FaUser } from "react-icons/fa";
 import Loader from '../Components/Loader';
 import Spinner from "react-bootstrap/Spinner";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
+    const navigate = useNavigate();
     const [user, setUser] = useState(null);
     const [editLoading, setEditLoading] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -18,12 +20,18 @@ const Profile = () => {
     });
 
     useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            navigate("/login");
+            return;
+        }
+
         const fetchUser = async () => {
             try {
-                const token = localStorage.getItem('token');
                 const res = await axios.get("http://localhost:8080/api/profile", {
                     headers: { Authorization: `Bearer ${token}` },
                 });
+
                 setUser(res.data);
                 setFormData({
                     name: res.data.name || "",
@@ -32,14 +40,20 @@ const Profile = () => {
                     phone: res.data.phone || "",
                 });
                 setLoading(false);
-            } catch (error) {
-                console.error(error);
-                setLoading(false);
+            } catch (err) {
+                if (err.response && (err.response.status === 401 || err.response.status === 403)) {
+                    localStorage.removeItem("token");
+                    navigate("/login");
+                } else {
+                    console.error(err);
+                    setLoading(false);
+                }
             }
-        }
+        };
 
         fetchUser();
     }, []);
+
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
