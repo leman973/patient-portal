@@ -77,10 +77,10 @@ const Profile = () => {
 
     return (
         <div className="container py-5 d-flex justify-content-center">
-            <div className="card shadow-sm border p-4 w-100" style={{ maxWidth: "680px" }}>
+            <div className="card border border-2 border-black shadow-sm border p-4 w-100" style={{ maxWidth: "680px" }}>
                 <div className="d-flex justify-content-between align-items-start gap-3 mb-4">
                     <div className='d-flex align-items-center flex-wrap gap-4'>
-                        <div className='position-relative d-inline-block'>
+                        <div className='profile-ring position-relative d-inline-block' onClick={() => editMode && document.getElementById("avatarInput").click()}>
                             {formData.avatar ? (
                                 <img src={URL.createObjectURL(formData.avatar)} alt="Preview" className="rounded-circle"
                                     style={{ width: "120px", height: "120px", objectFit: "cover", cursor: editMode ? "pointer" : "default" }} />
@@ -88,7 +88,7 @@ const Profile = () => {
                                 <img
                                     src={user.avatar}
                                     alt="Profile"
-                                    className="rounded-circle"
+                                    className="rounded-circle profile-img"
                                     style={{ width: "120px", height: "120px", objectFit: "cover", cursor: editMode ? "pointer" : "default" }}
                                 />) : (
                                 <div

@@ -62,7 +62,10 @@ const Contact = () => {
     <div className="d-flex flex-column flex-grow-1 align-items-center bg-light position-relative py-4">
       {/* Toast */}
       {showToast && (
-        <div className="toast show position-absolute bottom-0 end-0 m-4 mb-5">
+        <div
+          className="toast show position-fixed bottom-0 end-0 m-4"
+          style={{ zIndex: 1055 }}
+        >
           <div className="toast-header bg-success text-white">
             <strong className="me-auto">CarePlus Clinic</strong>
             <button
