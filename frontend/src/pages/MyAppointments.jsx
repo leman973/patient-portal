@@ -1,63 +1,100 @@
-import React from "react";
-
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Loader from "../Components/Loader";
 const MyAppointments = () => {
-  // Dummy data
-  const currentAppointments = [
-    {
-      id: 1,
-      date: "2026-02-10",
-      time: "11:30 AM",
-      patient: {
-        name: "Ramesh Kumar",
-        age: 30,
-      },
-      doctor: {
-        name: "Dr. Rahul Sharma",
-        speciality: "Neurologist",
-      },
-      fees: 500,
-      currency: "INR",
-      status: "active",
-    },
-  ];
+  const navigate = useNavigate();
+  const [appointments, setAppointments] = useState([]);
+  const [loader, setLoader] = useState(true);
 
-  const pastAppointments = [
-    {
-      id: 2,
-      date: "2026-01-25",
-      time: "4:00 PM",
-      patient: {
-        name: "Ramesh Kumar",
-        age: 30,
-      },
-      doctor: {
-        name: "Dr. Sneha Patil",
-        speciality: "Cardiologist",
-      },
-      fees: 600,
-      currency: "INR",
-      status: "completed",
-    },
-    {
-      id: 3,
-      date: "2026-01-15",
-      time: "10:00 AM",
-      patient: {
-        name: "Ramesh Kumar",
-        age: 30,
-      },
-      doctor: {
-        name: "Dr. Amit Deshmukh",
-        speciality: "General Physician",
-      },
-      fees: 400,
-      currency: "INR",
-      status: "cancelled",
-    },
-  ];
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+    const fetchAppointments = async () => {
+      try {
+        const res = await axios.get("http://localhost:8080/api/myAppointments", {
+          headers: { Authorization: `Bearer ${token}` }
+        })
+        setAppointments(res.data);
+        setLoader(false);
+      } catch (error) {
+        if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+          localStorage.removeItem("token");
+          navigate("/login");
+        } else {
+          console.error(error);
+          setLoader(false);
+        }
+      }
+    }
+    fetchAppointments();
+  }, [navigate])
+
+  const cancelAppointment = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        navigate("/login");
+        return;
+      }
+
+      await axios.put(
+        `http://localhost:8080/api/myAppointments/${id}`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      setAppointments(prev =>
+        prev.map(appt =>
+          appt._id === id ? { ...appt, status: "Cancelled" } : appt
+        )
+      );
+
+    } catch (error) {
+      if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+        localStorage.removeItem("token");
+        navigate("/login");
+      } else {
+        console.error("Cancel failed", error);
+        console.log(error.response.data.message);
+        alert("Could not cancel appointment");
+      }
+    }
+  };
+
+  const formatDate = (isoDate) => {
+    const date = new Date(isoDate);
+
+    return date.toLocaleDateString("en-IN", {
+      day: "numeric",
+      month: "long",
+      year: "numeric"
+    });
+  };
+
 
   const formatFees = (amount, currency) =>
     currency === "INR" ? `₹${amount}` : amount;
+
+  const currentAppointments = appointments.filter(a => a.status === "Active");
+  const pastAppointments = appointments.filter(a => a.status !== "Active");
+
+  if (loader) {
+    return <Loader></Loader>
+  }
+
+  if (currentAppointments.length === 0 && pastAppointments.length === 0) {
+    return (
+      <div className="container py-5">
+        <h4 className="fw-bold text-center text-success">
+          No Appointment Booked
+        </h4>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-light">
@@ -65,13 +102,13 @@ const MyAppointments = () => {
         <h2 className="text-center fw-bold mb-5">My Appointments</h2>
 
         {/* Current Appointments */}
-        <h4 className="fw-bold text-center text-success mb-4">
+        {currentAppointments.length > 0 && (<h4 className="fw-bold text-center text-success mb-4">
           Current Appointments
-        </h4>
+        </h4>)}
 
         {currentAppointments.map((appt) => (
           <div
-            key={appt.id}
+            key={appt._id}
             className="card border-0 shadow-sm mb-4 rounded-4 appointment-card mx-auto"
             style={{ maxWidth: "900px" }}
           >
@@ -80,7 +117,7 @@ const MyAppointments = () => {
               <div className="d-flex justify-content-between align-items-center mb-3">
                 <div>
                   <h6 className="mb-0 fw-bold">
-                    {appt.date} • {appt.time}
+                     {formatDate(appt.date)} • {appt.timeSlot}
                   </h6>
                 </div>
                 <span className="badge bg-success px-3 py-2 rounded-pill">
@@ -102,17 +139,20 @@ const MyAppointments = () => {
               <div className="row align-items-center">
                 <div className="col-md-8">
                   <p className="mb-1">
-                    <strong>Patient:</strong> {appt.patient.name} (
-                    {appt.patient.age} yrs)
+                    <strong>Patient:</strong> {appt.user.name} (
+                    {appt.user.age} yrs)
                   </p>
                   <p className="mb-0">
                     <strong>Fees:</strong>{" "}
-                    {formatFees(appt.fees, appt.currency)}
+                    {formatFees(appt.charge, appt.currency)}
                   </p>
                 </div>
 
                 <div className="col-md-4 text-md-end mt-3 mt-md-0">
-                  <button className="btn btn-outline-danger btn-sm rounded-pill px-4">
+                  <button
+                    className="btn btn-outline-danger btn-sm rounded-pill px-4"
+                    onClick={() => cancelAppointment(appt._id)}
+                  >
                     Cancel Appointment
                   </button>
                 </div>
@@ -122,13 +162,13 @@ const MyAppointments = () => {
         ))}
 
         {/* Past Appointments */}
-        <h4 className="fw-bold text-center text-primary mt-5 mb-4">
+        {pastAppointments.length > 0 && (<h4 className="fw-bold text-center text-primary mt-5 mb-4">
           Past Appointments
-        </h4>
+        </h4>)}
 
         {pastAppointments.map((appt) => (
           <div
-            key={appt.id}
+            key={appt._id}
             className="card border-0 shadow-sm mb-4 rounded-4 appointment-card mx-auto"
             style={{ maxWidth: "900px" }}
           >
@@ -136,12 +176,11 @@ const MyAppointments = () => {
               {/* Top Row */}
               <div className="d-flex justify-content-between align-items-center mb-3">
                 <h6 className="mb-0 fw-bold">
-                  {appt.date} • {appt.time}
+                   {formatDate(appt.date)} • {appt.timeSlot}
                 </h6>
                 <span
-                  className={`badge px-3 py-2 rounded-pill ${
-                    appt.status === "completed" ? "bg-success" : "bg-secondary"
-                  }`}
+                  className={`badge px-3 py-2 rounded-pill ${appt.status === "completed" ? "bg-success" : "bg-secondary"
+                    }`}
                 >
                   {appt.status === "completed" ? "Completed" : "Cancelled"}
                 </span>
@@ -159,11 +198,11 @@ const MyAppointments = () => {
 
               {/* Bottom Info */}
               <p className="mb-1">
-                <strong>Patient:</strong> {appt.patient.name} (
-                {appt.patient.age} yrs)
+                <strong>Patient:</strong> {appt.user.name} (
+                {appt.user.age} yrs)
               </p>
               <p className="mb-0">
-                <strong>Fees:</strong> {formatFees(appt.fees, appt.currency)}
+                <strong>Fees:</strong> {formatFees(appt.charge, appt.currency)}
               </p>
             </div>
           </div>

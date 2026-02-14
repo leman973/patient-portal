@@ -7,4 +7,6 @@ router.get('/',ensureAuthenticated,getUserDetail);
 
 router.post('/',ensureAuthenticated,addBooking);
 
+router.get('/allAppointments',ensureAuthenticated,addBooking);
+
 module.exports = router;

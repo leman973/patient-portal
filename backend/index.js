@@ -12,6 +12,7 @@ const ContactRouter = require("./Routes/ContactRouter");
 const connectCloudinary = require("./config/cloudinary");
 const doctorRoutes = require("./Routes/AdminDoctorRoutes");
 const doctorUserRoute = require("./Routes/DoctorDetailRouter")
+const myAppointments = require("./Routes/MyAppointments")
 const errorHandler = require("./Middlewares/errorHandler");
 
 const PORT = process.env.PORT || 8080;
@@ -28,6 +29,7 @@ app.use("/api/profile", profileRouter);
 app.use("/api/contact", ContactRouter);
 app.use("/api/doctors",doctorUserRoute)
 app.use("/api/admin/doctors", doctorRoutes);
+app.use("/api/myAppointments",myAppointments)
 
 app.use(errorHandler);
 

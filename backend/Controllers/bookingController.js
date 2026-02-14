@@ -60,6 +60,14 @@ const addBooking = async (req, res) => {
     }
 };
 
+const getAllAppointments = async(req,res)=>{
+    try {
+        
+    } catch (error) {
+        
+    }
+}
+
 module.exports = {
     getUserDetail,
     addBooking
