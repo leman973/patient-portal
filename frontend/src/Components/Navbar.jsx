@@ -3,13 +3,17 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import { FaUser } from "react-icons/fa";
+import Loader from "./Loader";
 
 export default function Navbar() {
   const [user, setUser] = useState(null);
+  const [loader, setLoader] = useState(false);
   const navigate = useNavigate();
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) return;
+
+    setLoader(true)
 
     const fetchUserDetails = async () => {
       try {
@@ -19,9 +23,10 @@ export default function Navbar() {
           },
         });
         setUser(res.data);
-
+        setLoader(false);
       } catch (error) {
         console.error("Failed to fetch user details", error);
+        setLoader(false)
       }
 
     };
@@ -35,6 +40,10 @@ export default function Navbar() {
     setUser(null);
     navigate("/home");
   };
+
+  if(loader){
+    return <Loader></Loader>;
+  }
 
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">

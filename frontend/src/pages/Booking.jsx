@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { FaUser } from "react-icons/fa";
 import Card from 'react-bootstrap/Card';
 import Button from "react-bootstrap/Button";
-import doctors from "../data/doctors";
 import { useParams } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
 import Loader from "../Components/Loader";
@@ -24,55 +23,135 @@ const Booking = () => {
         "Gastroentrologist"
     ];
 
-
+    const [allDoctors, setAllDoctors] = useState([]);
     const [selectedSlot, setSelectedSlot] = useState(null);
     const [selectedBatch, setSelectedBatch] = useState("Morning");
     const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
     const [selectedSpeciality, setSelectedSpeciality] = useState(null);
     const [selectedDoc, setSelectedDoc] = useState(null);
+    const [filteredDoctors, setFilteredDoctors] = useState([]);
 
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [bookingLoading, setBookingLoading] = useState(false);
 
     const { id } = useParams();
-    const doctor = doctors.find(doc => doc.id === Number(id));
 
-    useEffect(() => {
-        if (doctor?.batch?.length) {
-            setSelectedBatch(doctor.batch[0]);
-            setSelectedSpeciality(doctor.speciality)
-            setSelectedDoc(doctor)
+    const handleBooking = async () => {
+        if (!selectedDoc || selectedSlot === null || !selectedTimeSlot) {
+            alert("Please select a doctor, date, and time slot.");
+            return;
         }
-    }, [doctor]);
 
-    useEffect(() => {
         const token = localStorage.getItem("token");
-
         if (!token) {
             navigate("/login");
             return;
         }
 
-        const fetchUser = async () => {
+        setBookingLoading(true);
+
+        const bookingData = {
+            user: user.id,
+            doctor: selectedDoc._id,
+            speciality: selectedDoc.speciality,
+            batch: selectedBatch,
+            date: new Date(
+                slots[selectedSlot].year,
+                monthsOfYear.indexOf(slots[selectedSlot].monthName),
+                slots[selectedSlot].date
+            ).toISOString(),
+            timeSlot: selectedTimeSlot,
+            charge: selectedDoc.charge
+        };
+
+        try {
+            const response = await axios.post(
+                "http://localhost:8080/api/bookings",
+                bookingData,
+                {
+                    headers: { Authorization: `Bearer ${token}` }
+                }
+            );
+
+            alert("Appointment booked successfully!");
+
+            setSelectedDoc(null);
+            setSelectedSlot(null);
+            setSelectedBatch("Morning");
+            setSelectedTimeSlot(null);
+            setSelectedSpeciality(null);
+
+            navigate("/bookings");
+        } catch (error) {
+            if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+                localStorage.removeItem("token");
+                navigate("/login");
+            } else {
+                console.error(error);
+                console.error(error.response?.data?.message);
+                alert("Failed to book appointment. Please try again.");
+            }
+        } finally {
+            setBookingLoading(false);
+        }
+    };
+
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            navigate("/login");
+            return;
+        }
+
+        const fetchDoctorsAndUser = async () => {
             try {
-                const res = await axios.get("http://localhost:8080/api/bookings", {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                })
-                setUser(res.data);
+                const [userRes, doctorRes] = await Promise.all([
+                    axios.get("http://localhost:8080/api/bookings", {
+                        headers: { Authorization: `Bearer ${token}` }
+                    }),
+                    axios.get("http://localhost:8080/api/doctors", {
+                        headers: { Authorization: `Bearer ${token}` }
+                    })
+                ]);
+
+                setUser(userRes.data);
+                setAllDoctors(doctorRes.data);
+
+                if (id) {
+                    const doc = doctorRes.data.find(d => d.id === Number(id));
+                    if (doc) setSelectedDoc(doc);
+                }
+
                 setLoading(false);
             } catch (error) {
-                if (err.response && (err.response.status === 401 || err.response.status === 403)) {
-                    navigate("/login"); 
+                if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+                    localStorage.removeItem("token");
+                    navigate("/login");
                 } else {
-                    console.error(err);
+                    console.error(error);
                     setLoading(false);
                 }
             }
+        };
+
+        fetchDoctorsAndUser();
+    }, [id]);
+
+    useEffect(() => {
+        if (selectedDoc) {
+            setFilteredDoctors([selectedDoc]);
+        } else if (selectedSpeciality && selectedBatch) {
+            const filtered = allDoctors.filter(
+                doc => doc.speciality === selectedSpeciality && doc.batch.includes(selectedBatch)
+            );
+            setFilteredDoctors(filtered);
+        } else {
+            setFilteredDoctors([]); 
         }
-        fetchUser();
-    }, []);
+    }, [selectedSpeciality, selectedBatch, selectedDoc, allDoctors]);
+
 
     // Generate next N days
     function generateNextDays(n) {
@@ -113,11 +192,6 @@ const Booking = () => {
         Afternoon: generateSlots(2, "PM"),
         Evening: generateSlots(5, "PM"),
     };
-
-    const filteredDoctors = selectedSpeciality && selectedBatch
-        ? doctors.filter(doc => (doc.speciality === selectedSpeciality && doc.batch.includes(selectedBatch)))
-        : [];
-    const doctorsToShow = selectedDoc ? [selectedDoc] : filteredDoctors;
 
     if (loading) return <Loader />;
 
@@ -174,16 +248,24 @@ const Booking = () => {
                 <div>
                     <div className="d-flex flex-wrap gap-3   justify-content-center justify-content-md-start mb-3">
                         {Object.keys(batches).map((batch) => (
-                            <Button
-                                key={batch}
-                                disabled={doctor ? !doctor.batch.includes(batch) : null}
-                                onClick={() => { setSelectedBatch(batch); setSelectedTimeSlot(null); setSelectedDoc(null) }}
-                                variant={selectedBatch === batch ? "primary" : "outline-primary"}
-                                className='px-4 py-2 rounded-pill fw-semibold'
-                                style={{ minWidth: "120px" }}
+                            <span
+                                title={selectedDoc && !selectedDoc.batch.includes(batch) ? "Not available for selected doctor" : ""}
+                                style={{ cursor: selectedDoc && !selectedDoc.batch.includes(batch) ? "not-allowed" : "pointer" }}
                             >
-                                {batch}
-                            </Button>
+                                <Button
+                                    key={batch}
+                                    disabled={selectedDoc ? !selectedDoc.batch.includes(batch) : null}
+                                    onClick={() => { setSelectedBatch(batch); setSelectedTimeSlot(null); }}
+                                    variant={selectedBatch === batch ? "primary" : "outline-primary"}
+                                    className='px-4 py-2 rounded-pill fw-semibold'
+                                    style={{
+                                        minWidth: "120px",
+                                        pointerEvents: selectedDoc && !selectedDoc.batch.includes(batch) ? "none" : "auto"
+                                    }}
+                                >
+                                    {batch}
+                                </Button>
+                            </span>
                         ))}
                     </div>
 
@@ -210,16 +292,24 @@ const Booking = () => {
                 <h4 className="mb-3">Select Speciality</h4>
                 <div className="d-flex flex-wrap gap-3 mb-4 justify-content-center justify-content-lg-start">
                     {specialities.map((spec, index) => (
-                        <Button
-                            key={index}
-                            disabled={doctor ? doctor.speciality !== spec : null}
-                            variant={selectedSpeciality === spec ? "primary" : "outline-primary"}
-                            className='px-3 py-2 rounded-pill'
-                            style={{ minWidth: "150px" }}
-                            onClick={() => { setSelectedSpeciality(spec); setSelectedDoc(null); }}
+                        <span
+                            title={selectedDoc && selectedDoc.speciality !== spec ? "Not available for selected doctor" : ""}
+                            style={{ cursor: selectedDoc && selectedDoc.speciality !== spec ? "not-allowed" : "pointer" }}
                         >
-                            {spec}
-                        </Button>
+                            <Button
+                                key={index}
+                                disabled={selectedDoc ? selectedDoc.speciality !== spec : null}
+                                variant={selectedSpeciality === spec ? "primary" : "outline-primary"}
+                                className='px-3 py-2 rounded-pill'
+                                style={{
+                                    minWidth: "150px",
+                                    pointerEvents: selectedDoc && selectedDoc.speciality !== spec ? "none" : "auto"
+                                }}
+                                onClick={() => { setSelectedSpeciality(spec); setSelectedDoc(null); }}
+                            >
+                                {spec}
+                            </Button>
+                        </span>
                     ))}
                 </div>
             </div>
@@ -232,10 +322,11 @@ const Booking = () => {
                 {filteredDoctors.length === 0 && !selectedSpeciality && (
                     <p className="text-muted w-100 text-center">Select speciality to view available doctors</p>
                 )}
-                {doctorsToShow.map(doc => {
-                    const isSelected = selectedDoc?.id === doc.id;
+                {filteredDoctors.map(doc => {
+
+                    const isSelected = selectedDoc?._id === doc._id;
                     return (
-                        <Card key={doc.id} className="shadow-sm" style={{ maxWidth: "17rem" }}>
+                        <Card key={doc._id} className="shadow-sm" style={{ width: "17rem" }}>
                             <div
                                 className={`card border-0 text-center ${isSelected ? "border border-3 border-success shadow-lg" : ""}`}
                                 style={{ borderRadius: "15px", overflow: "hidden", transition: "0.3s" }}
@@ -252,7 +343,14 @@ const Booking = () => {
                                     src={doc.image}
                                     alt={doc.name}
                                     className="card-img-top"
-                                    style={{ height: "180px", objectFit: "cover" }}
+                                    style={{
+                                        height: "180px",
+                                        width: "100%",
+                                        objectFit: "contain",
+                                        objectPosition: "center",
+                                        padding: "10px",
+                                        backgroundColor: "#f8f9fa"
+                                    }}
                                 />
                                 <div className="card-body d-flex flex-column justify-content-center align-items-center p-3">
                                     <h5 className="fw-bold mb-1">{doc.name}</h5>
@@ -261,10 +359,10 @@ const Booking = () => {
                                     <p className="text-muted mb-1 small">Experience: {doc.experience}</p>
                                     <p className="text-muted mb-1">Charge: {doc.charge}Rs</p>
                                     <Button
-                                        variant={isSelected ? "success" : "outline-success"}
-                                        onClick={() => setSelectedDoc(doc)}
+                                        variant={isSelected ? "danger" : "outline-success"}
+                                        onClick={() => selectedDoc ? setSelectedDoc(null) : setSelectedDoc(doc)}
                                     >
-                                        {isSelected ? "Selected" : "Select"}
+                                        {isSelected ? "Deselect" : "Select"}
                                     </Button>
                                 </div>
                             </div>
@@ -278,11 +376,20 @@ const Booking = () => {
                 <Button
                     variant="success"
                     size="lg"
-                    disabled
+                    disabled={!selectedDoc || selectedSlot === null || !selectedTimeSlot || bookingLoading}
                     style={{ minWidth: "220px", fontWeight: "600", padding: "10px 15px" }}
+                    onClick={handleBooking}
                 >
-                    Book Appointment
+                    {bookingLoading ? (
+                        <>
+                            <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                            Booking...
+                        </>
+                    ) : (
+                        "Book Appointment"
+                    )}
                 </Button>
+
             </div>
         </div>
     )
