@@ -14,7 +14,6 @@ const connectCloudinary = require("./config/cloudinary");
 const doctorRoutes = require("./Routes/AdminDoctorRoutes");
 const allDoctorRoutes = require("./Routes/AllDoctorRoutes");
 const errorHandler = require("./Middlewares/errorHandler");
-const topdoctorRoutes = require("./Routes/TopDoctorRoute");
 
 const PORT = process.env.PORT || 8080;
 connectDB();
@@ -30,7 +29,6 @@ app.use("/api/profile", profileRouter);
 app.use("/api/contact", ContactRouter);
 app.use("/api/admin/doctors", doctorRoutes);
 app.use("/api/doctors", allDoctorRoutes);
-app.use("/api/doctors", topdoctorRoutes);
 
 app.use(errorHandler);
 

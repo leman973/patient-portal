@@ -5,7 +5,10 @@ const {
   getDoctorsBySpeciality,
 } = require("../Controllers/AllDoctorController");
 
-// GET doctors according to speciality
+const { getTopDoctors } = require("../Controllers/TopDoctorController");
+
 router.get("/", getDoctorsBySpeciality);
+
+router.get("/top", getTopDoctors)
 
 module.exports = router;

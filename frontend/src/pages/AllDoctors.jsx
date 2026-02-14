@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Card from "react-bootstrap/Card";
 import { useNavigate, useParams } from "react-router-dom";
+import Loader from "../Components/Loader";
 
 const specialities = [
   "All Doctors",
@@ -15,6 +16,7 @@ const specialities = [
 
 const AllDoctors = () => {
   const [filteredDocs, setFilteredDocs] = useState([]);
+  const [loader, setLoader] = useState(true);
   const [activeSpec, setActiveSpec] = useState("All Doctors");
 
   const { speciality } = useParams();
@@ -30,14 +32,20 @@ const AllDoctors = () => {
 
       const response = await axios.get(url);
       setFilteredDocs(response.data);
+      setLoader(false);
     } catch (error) {
       console.log("Error fetching doctors:", error);
+      setLoader(false);
     }
   };
 
   useEffect(() => {
     fetchDoctors();
   }, [speciality]);
+
+  if(loader){
+    return <Loader></Loader>
+  }
 
   return (
     <section className="py-4 px-3">
@@ -99,7 +107,7 @@ const AllDoctors = () => {
                     alt={doc.name}
                     className="card-img-top"
                     style={{
-                      height: "180px", // smaller image
+                      height: "180px", 
                       width: "100%",
                       objectFit: "contain",
                       objectPosition: "center",
