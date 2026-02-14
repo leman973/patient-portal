@@ -1,8 +1,8 @@
-const getUserDetail = require('../Controllers/bookingController');
-const ensureAuthenticated = require('../Middlewares/Auth');
+const getUserDetail = require("../Controllers/bookingController");
+const ensureAuthenticated = require("../Middlewares/Auth");
 
-const router = require('express').Router();
+const router = require("express").Router();
 
-router.get('/',ensureAuthenticated,getUserDetail);
+router.get("/", ensureAuthenticated, getUserDetail);
 
 module.exports = router;
