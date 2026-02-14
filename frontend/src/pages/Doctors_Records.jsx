@@ -45,19 +45,19 @@ export default function DoctorManagement() {
   const fetchDoctors = async (token) => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get(
-        "http://localhost:8080/api/admin/doctors",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await axios.get("http://localhost:8080/api/admin/doctors", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       setDoctors(res.data);
       setLoading(false);
     } catch (err) {
-      if (err.response && (err.response.status === 401 || err.response.status === 403)) {
+      if (
+        err.response &&
+        (err.response.status === 401 || err.response.status === 403)
+      ) {
         localStorage.removeItem("token");
         navigate("/login");
       } else {
@@ -66,7 +66,6 @@ export default function DoctorManagement() {
       }
     }
   };
-
 
   // Handle Input Change
   const handleChange = (e) => {
@@ -135,34 +134,37 @@ export default function DoctorManagement() {
     }
   };
 
-
-
   // Delete Doctor
   const deleteDoctor = async () => {
     if (!selectedId) return alert("Select Doctor");
 
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`http://localhost:8080/api/admin/doctors/${selectedId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      await axios.delete(
+        `http://localhost:8080/api/admin/doctors/${selectedId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
+      );
 
       alert("Doctor Deleted");
-      fetchDoctors(token); 
+      fetchDoctors(token);
       setSelectedId("");
     } catch (err) {
       console.error(err);
-      if (err.response && (err.response.status === 401 || err.response.status === 403)) {
+      if (
+        err.response &&
+        (err.response.status === 401 || err.response.status === 403)
+      ) {
         localStorage.removeItem("token");
-        navigate("/login"); 
+        navigate("/login");
       } else {
         alert("Error deleting doctor");
       }
     }
   };
-
 
   if (loading) {
     return <Loader></Loader>;
@@ -183,54 +185,82 @@ export default function DoctorManagement() {
         <div className="card-body">
           <form onSubmit={addDoctor}>
             <div className="row g-3">
-
               <div className="col-md-4">
-                <input type="text" name="name" placeholder="Doctor Name"
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="Doctor Name"
                   className="form-control"
                   value={formData.name}
-                  onChange={handleChange} required />
+                  onChange={handleChange}
+                  required
+                />
               </div>
 
               <div className="col-md-4">
-                <input type="email" name="email" placeholder="Email"
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="Email"
                   className="form-control"
                   value={formData.email}
-                  onChange={handleChange} required />
+                  onChange={handleChange}
+                  required
+                />
               </div>
 
               {/* SPECIALITY DROPDOWN */}
               <div className="col-md-4">
-                <select name="speciality"
+                <select
+                  name="speciality"
                   className="form-control"
                   value={formData.speciality}
                   onChange={handleChange}
-                  required>
+                  required
+                >
                   <option value="">Select Speciality</option>
                   {specialities.map((spec, i) => (
-                    <option key={i} value={spec}>{spec}</option>
+                    <option key={i} value={spec}>
+                      {spec}
+                    </option>
                   ))}
                 </select>
               </div>
 
               <div className="col-md-4">
-                <input type="text" name="qualification" placeholder="Qualification"
+                <input
+                  type="text"
+                  name="qualification"
+                  placeholder="Qualification"
                   className="form-control"
                   value={formData.qualification}
-                  onChange={handleChange} required />
+                  onChange={handleChange}
+                  required
+                />
               </div>
 
               <div className="col-md-4">
-                <input type="number" name="experience" placeholder="Experience (Years)"
+                <input
+                  type="number"
+                  name="experience"
+                  placeholder="Experience (Years)"
                   className="form-control"
                   value={formData.experience}
-                  onChange={handleChange} required />
+                  onChange={handleChange}
+                  required
+                />
               </div>
 
               <div className="col-md-4">
-                <input type="number" name="charge" placeholder="Consultation Fee ₹"
+                <input
+                  type="number"
+                  name="charge"
+                  placeholder="Consultation Fee ₹"
                   className="form-control"
                   value={formData.charge}
-                  onChange={handleChange} required />
+                  onChange={handleChange}
+                  required
+                />
               </div>
 
               {/* BATCH CHECKBOX */}
@@ -239,10 +269,12 @@ export default function DoctorManagement() {
 
                 {["Morning", "Afternoon", "Evening"].map((b) => (
                   <div className="form-check" key={b}>
-                    <input className="form-check-input"
+                    <input
+                      className="form-check-input"
                       type="checkbox"
                       checked={formData.batch.includes(b)}
-                      onChange={() => handleBatchChange(b)} />
+                      onChange={() => handleBatchChange(b)}
+                    />
                     <label className="form-check-label">{b}</label>
                   </div>
                 ))}
@@ -268,25 +300,32 @@ export default function DoctorManagement() {
                     <img
                       src={preview}
                       alt="Preview"
-                      style={{ width: "150px", height: "150px", objectFit: "cover", borderRadius: "8px" }}
+                      style={{
+                        width: "150px",
+                        height: "150px",
+                        objectFit: "cover",
+                        borderRadius: "8px",
+                      }}
                     />
                   </div>
                 )}
               </div>
-
             </div>
 
             <button className="btn btn-success mt-3 fw-bold" type="submit">
               {addLoading ? (
                 <>
-                  <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                  <span
+                    className="spinner-border spinner-border-sm me-2"
+                    role="status"
+                    aria-hidden="true"
+                  ></span>
                   Adding...
                 </>
               ) : (
                 "Add Doctor"
               )}
             </button>
-
           </form>
         </div>
       </div>
@@ -298,12 +337,16 @@ export default function DoctorManagement() {
         </div>
 
         <div className="card-body d-flex gap-3">
-          <select className="form-select w-50"
+          <select
+            className="form-select w-50"
             value={selectedId}
-            onChange={(e) => setSelectedId(e.target.value)}>
+            onChange={(e) => setSelectedId(e.target.value)}
+          >
             <option value="">Select Doctor</option>
             {doctors.map((doc) => (
-              <option key={doc._id} value={doc._id}>{doc.name}</option>
+              <option key={doc._id} value={doc._id}>
+                {doc.name}
+              </option>
             ))}
           </select>
 

@@ -2,8 +2,10 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
-// images
+// Speciality Icons
 import physician from "../assets/Physisian.png";
 import neurologist from "../assets/Neurologist.png";
 import dermatologist from "../assets/Dermatologist.png";
@@ -18,35 +20,29 @@ const specialists = [
   { name: "Gastroenterologist", icon: gastro },
 ];
 
-const doctors = [
-  {
-    id: 1,
-    name: "Dr. Ananya Sharma",
-    speciality: "Cardiologist",
-    experience: "12 Years",
-    image:
-      "https://static.vecteezy.com/system/resources/thumbnails/028/287/555/small/an-indian-young-female-doctor-isolated-on-green-ai-generated-photo.jpg",
-  },
-  {
-    id: 2,
-    name: "Dr. Rahul Mehta",
-    speciality: "Neurologist",
-    experience: "9 Years",
-    image:
-      "https://static.vecteezy.com/system/resources/thumbnails/026/375/249/small/ai-generative-portrait-of-confident-male-doctor-in-white-coat-and-stethoscope-standing-with-arms-crossed-and-looking-at-camera-photo.jpg",
-  },
-  {
-    id: 3,
-    name: "Dr. Pooja Verma",
-    speciality: "Dermatologist",
-    experience: "7 Years",
-    image:
-      "https://images.unsplash.com/photo-1659353888906-adb3e0041693?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW5kaWFuJTIwZG9jdG9yc3xlbnwwfHwwfHx8MA%3D%3D",
-  },
-];
-
 export default function Home() {
   const navigate = useNavigate();
+  const [doctors, setDoctors] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchTopDoctors = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:8080/api/doctors/top",
+        );
+        setDoctors(response.data);
+      } catch (err) {
+        setError("Failed to fetch doctors");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTopDoctors();
+  }, []);
 
   return (
     <>
@@ -102,41 +98,51 @@ export default function Home() {
         <h2 className="text-center fw-bold mb-4">Top Doctors</h2>
 
         <div className="row g-4">
-          {doctors.map((doc) => (
-            <div className="col-md-4" key={doc.id}>
-              <div
-                className="card h-100 border-0 shadow-sm"
-                style={{ transition: "0.3s", borderRadius: "15px" }}
-                onMouseOver={(e) => {
-                  e.currentTarget.style.transform = "translateY(-10px)";
-                  e.currentTarget.style.boxShadow =
-                    "0 12px 25px rgba(0,0,0,0.15)";
-                }}
-                onMouseOut={(e) => {
-                  e.currentTarget.style.transform = "translateY(0)";
-                  e.currentTarget.style.boxShadow =
-                    "0 4px 10px rgba(0,0,0,0.1)";
-                }}
-              >
-                <img
-                  src={doc.image}
-                  className="card-img-top"
-                  alt={doc.name}
-                  style={{
-                    borderTopLeftRadius: "15px",
-                    borderTopRightRadius: "15px",
+          {loading && <p className="text-center">Loading top doctors...</p>}
+
+          {error && <p className="text-danger text-center">{error}</p>}
+
+          {!loading &&
+            !error &&
+            doctors.map((doc) => (
+              <div className="col-12 col-sm-6 col-md-4 col-lg-4" key={doc._id}>
+                <div
+                  className="card h-100 border border-5 border-light shadow-sm"
+                  style={{ transition: "0.3s", borderRadius: "15px" }}
+                  onMouseOver={(e) => {
+                    e.currentTarget.style.transform = "translateY(-10px)";
+                    e.currentTarget.style.boxShadow =
+                      "0 12px 25px rgba(0,0,0,0.15)";
                   }}
-                />
-                <div className="card-body text-center">
-                  <h5 className="card-title fw-bold">{doc.name}</h5>
-                  <p className="text-muted mb-1">{doc.speciality}</p>
-                  <p className="text-muted small">
-                    Experience: {doc.experience}
-                  </p>
+                  onMouseOut={(e) => {
+                    e.currentTarget.style.transform = "translateY(0)";
+                    e.currentTarget.style.boxShadow =
+                      "0 4px 10px rgba(0,0,0,0.1)";
+                  }}
+                >
+                  <img
+                    src={doc.image}
+                    className="card-img-top border-0"
+                    alt={doc.name}
+                    style={{
+                      height: "180px", // smaller image
+                      width: "100%",
+                      objectFit: "contain",
+                      objectPosition: "center",
+                      padding: "10px",
+                    }}
+                  />
+                  <div className="card-body text-center">
+                    <h5 className="card-title fw-bold">{doc.name}</h5>
+                    <p className="text-muted mb-1">{doc.speciality}</p>
+                    <p className="text-muted mb-1">{doc.qualification}</p>
+                    <p className="text-muted small">
+                      Experience: {doc.experience} Years
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
         </div>
       </section>
     </>

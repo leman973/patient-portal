@@ -1,4 +1,5 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const app = express();
 require("dotenv").config();
 const connectDB = require("./config/mongoDB");
@@ -13,6 +14,7 @@ const connectCloudinary = require("./config/cloudinary");
 const doctorRoutes = require("./Routes/AdminDoctorRoutes");
 const doctorUserRoute = require("./Routes/DoctorDetailRouter")
 const myAppointments = require("./Routes/MyAppointments")
+const allDoctorRoutes = require("./Routes/AllDoctorRoutes");
 const errorHandler = require("./Middlewares/errorHandler");
 
 const PORT = process.env.PORT || 8080;
@@ -30,6 +32,7 @@ app.use("/api/contact", ContactRouter);
 app.use("/api/doctors",doctorUserRoute)
 app.use("/api/admin/doctors", doctorRoutes);
 app.use("/api/myAppointments",myAppointments)
+app.use("/api/doctors", allDoctorRoutes);
 
 app.use(errorHandler);
 
