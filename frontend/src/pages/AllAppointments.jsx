@@ -45,7 +45,6 @@ const AllAppointmentsAdmin = () => {
         },
       );
 
-      // After updating in DB → refresh list
       fetchAppointments();
     } catch (error) {
       console.log("Error updating status:", error);
