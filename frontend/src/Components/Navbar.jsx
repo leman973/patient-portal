@@ -18,7 +18,7 @@ export default function Navbar() {
 
     const fetchUserDetails = async () => {
       try {
-        const res = await axios.get("http://localhost:8080/api/me", {
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/me`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

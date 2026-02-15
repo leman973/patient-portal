@@ -24,7 +24,7 @@ const AllDoctors = () => {
 
   const fetchDoctors = async () => {
     try {
-      let url = "http://localhost:8080/api/doctors";
+      let url = `${import.meta.env.VITE_API_URL}/api/doctors`;
 
       if (speciality && speciality !== "All Doctors") {
         url += `?speciality=${speciality}`;

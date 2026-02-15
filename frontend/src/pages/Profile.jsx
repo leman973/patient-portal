@@ -28,7 +28,7 @@ const Profile = () => {
 
         const fetchUser = async () => {
             try {
-                const res = await axios.get("http://localhost:8080/api/profile", {
+                const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/profile`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
 
@@ -72,7 +72,7 @@ const Profile = () => {
             if (formData.avatar) {
                 dataToSend.append("avatar", formData.avatar);
             }
-            const res = await axios.put("http://localhost:8080/api/profile", dataToSend, {
+            const res = await axios.put(`${import.meta.env.VITE_API_URL}/api/profile`, dataToSend, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             setUser(res.data);

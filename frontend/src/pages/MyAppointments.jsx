@@ -15,7 +15,7 @@ const MyAppointments = () => {
     }
     const fetchAppointments = async () => {
       try {
-        const res = await axios.get("http://localhost:8080/api/myAppointments", {
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/myAppointments`, {
           headers: { Authorization: `Bearer ${token}` }
         })
         setAppointments(res.data);
@@ -42,7 +42,7 @@ const MyAppointments = () => {
       }
 
       await axios.put(
-        `http://localhost:8080/api/myAppointments/${id}`,
+        `${import.meta.env.VITE_API_URL}/api/myAppointments/${id}`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );

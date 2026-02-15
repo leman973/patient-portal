@@ -30,7 +30,7 @@ export default function Home() {
     const fetchTopDoctors = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/api/doctors/top",
+          `${import.meta.env.VITE_API_URL}/api/doctors/top`,
         );
         setDoctors(response.data);
       } catch (err) {

@@ -16,7 +16,6 @@ export default function Signup() {
   const handleSubmit = async(e) => {
     e.preventDefault();
 
-    // Frontend validations
     if (!name || !email || !password || !age || !gender || !phone) {
       toast.error("Please fill in all fields!");
       return;
@@ -28,7 +27,7 @@ export default function Signup() {
     }
 
     try {
-      const res = await axios.post("http://localhost:8080/api/auth/signup",{
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/signup`,{
         name,
         email,
         password,

@@ -45,7 +45,7 @@ export default function DoctorManagement() {
   const fetchDoctors = async (token) => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get("http://localhost:8080/api/admin/doctors", {
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/admin/doctors`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -108,7 +108,7 @@ export default function DoctorManagement() {
       formData.batch.forEach((b) => dataToSend.append("batch", b));
       if (formData.image) dataToSend.append("image", formData.image);
 
-      await axios.post("http://localhost:8080/api/admin/doctors", dataToSend, {
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/admin/doctors`, dataToSend, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
@@ -155,7 +155,7 @@ export default function DoctorManagement() {
     try {
       const token = localStorage.getItem("token");
       await axios.delete(
-        `http://localhost:8080/api/admin/doctors/${selectedId}`,
+        `${import.meta.env.VITE_API_URL}/api/admin/doctors/${selectedId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

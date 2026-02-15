@@ -15,7 +15,7 @@ const AllAppointmentsAdmin = () => {
       const token = localStorage.getItem("token");
 
       const response = await axios.get(
-        "http://localhost:8080/api/admin/appointments",
+        `${import.meta.env.VITE_API_URL}/api/admin/appointments`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -30,7 +30,6 @@ const AllAppointmentsAdmin = () => {
         navigate("/login");
       } else {
         console.error(error);
-        setLoading(false);
       }
     }
   };
@@ -44,7 +43,7 @@ const AllAppointmentsAdmin = () => {
       const token = localStorage.getItem("token");
 
       await axios.put(
-        `http://localhost:8080/api/admin/appointments/${id}`,
+        `${import.meta.env.VITE_API_URL}/api/admin/appointments/${id}`,
         { status: newStatus },
         {
           headers: {
@@ -60,7 +59,6 @@ const AllAppointmentsAdmin = () => {
         navigate("/login");
       } else {
         console.error(error);
-        setLoading(false);
       }
     }
   };

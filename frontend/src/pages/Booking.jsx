@@ -67,7 +67,7 @@ const Booking = () => {
 
         try {
             const response = await axios.post(
-                "http://localhost:8080/api/bookings",
+                `${import.meta.env.VITE_API_URL}/api/bookings`,
                 bookingData,
                 {
                     headers: { Authorization: `Bearer ${token}` }
@@ -108,10 +108,10 @@ const Booking = () => {
         const fetchDoctorsAndUser = async () => {
             try {
                 const [userRes, doctorRes] = await Promise.all([
-                    axios.get("http://localhost:8080/api/bookings", {
+                    axios.get(`${import.meta.env.VITE_API_URL}/api/bookings`, {
                         headers: { Authorization: `Bearer ${token}` }
                     }),
-                    axios.get("http://localhost:8080/api/appt-doctors", {
+                    axios.get(`${import.meta.env.VITE_API_URL}/api/appt-doctors`, {
                         headers: { Authorization: `Bearer ${token}` }
                     })
                 ]);

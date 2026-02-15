@@ -25,7 +25,7 @@ const Contact = () => {
     setLoading(true);
     try {
       const res = await axios.post(
-        "http://localhost:8080/api/contact",
+        `${import.meta.env.VITE_API_URL}/api/contact`,
         formData,
         {
           headers: {
@@ -75,7 +75,7 @@ const Contact = () => {
             ></button>
           </div>
           <div className="toast-body">
-            ✅ Your message has been sent successfully. We’ll contact you soon.
+             Your message has been sent successfully. We’ll contact you soon.
           </div>
         </div>
       )}
