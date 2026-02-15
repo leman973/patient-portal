@@ -179,10 +179,10 @@ const MyAppointments = () => {
                    {formatDate(appt.date)} • {appt.timeSlot}
                 </h6>
                 <span
-                  className={`badge px-3 py-2 rounded-pill ${appt.status === "completed" ? "bg-success" : "bg-secondary"
+                  className={`badge px-3 py-2 rounded-pill ${appt.status === "Completed" ? "bg-success" : "bg-secondary"
                     }`}
                 >
-                  {appt.status === "completed" ? "Completed" : "Cancelled"}
+                  {appt.status === "Completed" ? "Completed" : "Cancelled"}
                 </span>
               </div>
 
