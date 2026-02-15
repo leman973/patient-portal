@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const AllAppointmentsAdmin = () => {
   // Admin sees ALL appointments
+  const navigate = useNavigate();
   const [appointments, setAppointments] = useState([]);
   useEffect(() => {
     fetchAppointments();
@@ -23,7 +25,13 @@ const AllAppointmentsAdmin = () => {
 
       setAppointments(response.data);
     } catch (error) {
-      console.log("Error fetching appointments:", error);
+      if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+        localStorage.removeItem("token");
+        navigate("/login");
+      } else {
+        console.error(error);
+        setLoading(false);
+      }
     }
   };
 
@@ -47,7 +55,13 @@ const AllAppointmentsAdmin = () => {
 
       fetchAppointments();
     } catch (error) {
-      console.log("Error updating status:", error);
+      if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+        localStorage.removeItem("token");
+        navigate("/login");
+      } else {
+        console.error(error);
+        setLoading(false);
+      }
     }
   };
 

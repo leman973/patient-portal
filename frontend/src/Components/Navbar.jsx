@@ -53,8 +53,74 @@ export default function Navbar() {
           🏥 CarePlus Clinic
         </NavLink>
 
+        <div className="d-flex align-items-center order-lg-3">
+          {!user ? (
+            <>
+              <NavLink
+                to="/login"
+                className="btn btn-info text-white fw-bold me-2"
+              >
+                Login
+              </NavLink>
+              <NavLink to="/signup" className="btn btn-info text-white fw-bold">
+                Register
+              </NavLink>
+            </>
+          ) : (
+            <div className="dropdown">
+              <button
+                className="btn p-0 border-0 bg-transparent dropdown-toggle d-flex align-items-center"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                {user.avatar ? (
+                  <img
+                    src={user.avatar}
+                    alt="profile"
+                    className="rounded-circle"
+                    width="40"
+                    height="40"
+                  />
+                ) : (
+                  <div
+                    className="rounded-circle d-flex align-items-center justify-content-center bg-light shadow"
+                    style={{ width: "40px", height: "40px" }}
+                  >
+                    <FaUser size={20} />
+                  </div>
+                )}
+              </button>
+
+              <ul className="dropdown-menu dropdown-menu-end shadow">
+                <li className="px-3 py-2 fw-bold text-success">{user.name}</li>
+                <li>
+                  <hr className="dropdown-divider" />
+                </li>
+                <li>
+                  <Link className="dropdown-item" to="/profile">
+                    My Profile
+                  </Link>
+                </li>
+                <li>
+                  <Link className="dropdown-item" to="/my-appointments">
+                    My Bookings
+                  </Link>
+                </li>
+                <li>
+                  <button
+                    className="dropdown-item text-danger"
+                    onClick={handleLogout}
+                  >
+                    Logout
+                  </button>
+                </li>
+              </ul>
+            </div>
+          )}
+        </div>
+
         <button
-          className="navbar-toggler"
+          className="navbar-toggler order-lg-2"
           type="button"
           data-bs-toggle="collapse"
           data-bs-target="#navbarContent"
@@ -66,7 +132,7 @@ export default function Navbar() {
         </button>
 
         {/* Center: Nav links */}
-        <div className="collapse navbar-collapse" id="navbarContent">
+        <div className="collapse navbar-collapse order-lg-1" id="navbarContent">
           <ul className="navbar-nav mx-auto mb-2 mb-lg-0">
             <li className="nav-item">
               <NavLink
@@ -140,73 +206,6 @@ export default function Navbar() {
               </>
             )}
           </ul>
-        </div>
-
-        {/* Right: Login/Register buttons */}
-        <div className="d-flex align-items-center ms-lg-3">
-          {!user ? (
-            <>
-              <NavLink
-                to="/login"
-                className="btn btn-info text-white fw-bold me-2"
-              >
-                Login
-              </NavLink>
-              <NavLink to="/signup" className="btn btn-info text-white fw-bold">
-                Register
-              </NavLink>
-            </>
-          ) : (
-            <div className="dropdown">
-              <button
-                className="btn p-0 border-0 bg-transparent dropdown-toggle d-flex align-items-center"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                {user.avatar ? (
-                  <img
-                    src={user.avatar}
-                    alt="profile"
-                    className="rounded-circle"
-                    width="40"
-                    height="40"
-                  />
-                ) : (
-                  <div
-                    className="rounded-circle d-flex align-items-center justify-content-center bg-light shadow"
-                    style={{ width: "40px", height: "40px" }}
-                  >
-                    <FaUser size={20} />
-                  </div>
-                )}
-              </button>
-
-              <ul className="dropdown-menu dropdown-menu-end shadow">
-                <li className="px-3 py-2 fw-bold text-success">{user.name}</li>
-                <li>
-                  <hr className="dropdown-divider" />
-                </li>
-                <li>
-                  <Link className="dropdown-item" to="/profile">
-                    My Profile
-                  </Link>
-                </li>
-                <li>
-                  <Link className="dropdown-item" to="/my-appointments">
-                    My Bookings
-                  </Link>
-                </li>
-                <li>
-                  <button
-                    className="dropdown-item text-danger"
-                    onClick={handleLogout}
-                  >
-                    Logout
-                  </button>
-                </li>
-              </ul>
-            </div>
-          )}
         </div>
       </div>
     </nav>
