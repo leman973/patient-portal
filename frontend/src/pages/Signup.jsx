@@ -12,22 +12,26 @@ export default function Signup() {
   const [age, setAge] = useState("");
   const [gender, setGender] = useState("");
   const [phone, setPhone] = useState("");
+  const [loader, setLoader] = useState(false);
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoader(true);
 
     if (!name || !email || !password || !age || !gender || !phone) {
       toast.error("Please fill in all fields!");
+      setLoader(false);
       return;
     }
 
     if (password.length < 6) {
       toast.error("Password must be at least 6 characters!");
+      setLoader(false);
       return;
     }
 
     try {
-      const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/signup`,{
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/signup`, {
         name,
         email,
         password,
@@ -37,10 +41,12 @@ export default function Signup() {
       });
 
       toast.success(res.data.message || "Registration successful");
-      navigate("/login"); 
+      navigate("/login");
     } catch (error) {
       const message = error.response?.data?.message || "Signup Failed please try again";
       toast.error(message);
+    } finally {
+      setLoader(false);
     }
   };
 
@@ -157,7 +163,7 @@ export default function Signup() {
             {/* Button */}
             <button
               type="submit"
-              className="btn w-100 mt-3"
+              className="btn w-100 mt-3 d-flex justify-content-center align-items-center"
               style={{
                 backgroundColor: "#4CAF50",
                 color: "#fff",
@@ -167,9 +173,21 @@ export default function Signup() {
               }}
               onMouseOver={(e) => (e.target.style.transform = "scale(1.05)")}
               onMouseOut={(e) => (e.target.style.transform = "scale(1)")}
+              disabled={loader} 
             >
-              Register
+              {loader ? (
+                <div
+                  className="spinner-border spinner-border-sm text-light"
+                  role="status"
+                  style={{ width: "1rem", height: "1rem" }}
+                >
+                  <span className="visually-hidden">Loading...</span>
+                </div>
+              ) : (
+                "Register"
+              )}
             </button>
+
           </form>
 
           <p className="text-center mt-3" style={{ color: "#555" }}>
@@ -178,23 +196,8 @@ export default function Signup() {
               Login
             </a>
           </p>
-
-          <ToastContainer position="top-right" autoClose={3000} />
         </div>
       </div>
-
-      {/* Footer */}
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
     </div>
   );
 }

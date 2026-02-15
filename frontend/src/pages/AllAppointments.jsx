@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Loader from "../Components/Loader";
 
 const AllAppointmentsAdmin = () => {
-  // Admin sees ALL appointments
   const navigate = useNavigate();
   const [appointments, setAppointments] = useState([]);
+  const [loader, setLoader] = useState(true);
   useEffect(() => {
     fetchAppointments();
   }, []);
@@ -31,6 +32,8 @@ const AllAppointmentsAdmin = () => {
       } else {
         console.error(error);
       }
+    } finally {
+      setLoader(false); 
     }
   };
 
@@ -69,6 +72,10 @@ const AllAppointmentsAdmin = () => {
     if (status === "Cancelled") return "bg-danger";
     return "bg-secondary";
   };
+
+  if(loader){
+    return <Loader></Loader>
+  }
 
   return (
     <div className="container py-5">

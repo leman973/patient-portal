@@ -11,6 +11,7 @@ export default function Login() {
   const errorMessage = location.state?.error;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loader, setLoader] = useState(false);
 
   useEffect(() => {
     if (errorMessage) {
@@ -22,9 +23,11 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoader(true);
 
     if (!email || !password) {
       toast.error(" Please fill in all fields!");
+      setLoader(false);
       return;
     }
 
@@ -44,6 +47,8 @@ export default function Login() {
     } catch (error) {
       const message = error.response?.data?.message || "Login Failed please try again";
       toast.error(message);
+    } finally {
+      setLoader(false);
     }
   };
 
@@ -118,7 +123,7 @@ export default function Login() {
 
             <button
               type="submit"
-              className="btn w-100 mt-3"
+              className="btn w-100 mt-3 d-flex justify-content-center align-items-center"
               style={{
                 backgroundColor: "#4CAF50",
                 color: "#fff",
@@ -129,8 +134,19 @@ export default function Login() {
               onMouseOver={(e) => (e.target.style.transform = "scale(1.05)")}
               onMouseOut={(e) => (e.target.style.transform = "scale(1)")}
             >
-              Login
+              {loader ? (
+                <div
+                  className="spinner-border text-light"
+                  role="status"
+                  style={{ width: "1.2rem", height: "1.2rem" }}
+                >
+                  <span className="visually-hidden">Loading...</span>
+                </div>
+              ) : (
+                "Login"
+              )}
             </button>
+
           </form>
 
           <p className="text-center mt-3" style={{ color: "#555" }}>
