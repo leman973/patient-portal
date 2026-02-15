@@ -36,8 +36,16 @@ function LayoutWithNavbar() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/admin/doctors_records" element={<Doctors_Records />} />
+          <Route
+            path="/admin/appointments"
+            element={<AllAppointmentsAdmin />}
+          />
+
           <Route path="/my-appointments" element={<MyAppointments />} />
-          <Route path="/admin/appointments" element={<AllAppointmentsAdmin />} />
+          <Route
+            path="/admin/appointments"
+            element={<AllAppointmentsAdmin />}
+          />
         </Routes>
       </main>
 

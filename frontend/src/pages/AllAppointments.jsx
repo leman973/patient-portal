@@ -1,55 +1,62 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 const AllAppointmentsAdmin = () => {
   // Admin sees ALL appointments
-  const [appointments, setAppointments] = useState([
-    {
-      id: 1,
-      date: "2026-02-10",
-      time: "11:30 AM",
-      patient: { name: "Ramesh Kumar", age: 30, phone: "9876543210" },
-      doctor: { name: "Dr. Rahul Sharma", speciality: "Neurologist" },
-      fees: 500,
-      currency: "INR",
-      status: "active",
-    },
-    {
-      id: 2,
-      date: "2026-01-25",
-      time: "4:00 PM",
-      patient: { name: "Priya Singh", age: 42, phone: "9123456780" },
-      doctor: { name: "Dr. Sneha Patil", speciality: "Cardiologist" },
-      fees: 600,
-      currency: "INR",
-      status: "completed",
-    },
-    {
-      id: 3,
-      date: "2026-01-15",
-      time: "10:00 AM",
-      patient: { name: "Amit Shah", age: 35, phone: "9988776655" },
-      doctor: { name: "Dr. Amit Deshmukh", speciality: "General Physician" },
-      fees: 400,
-      currency: "INR",
-      status: "cancelled",
-    },
-  ]);
+  const [appointments, setAppointments] = useState([]);
+  useEffect(() => {
+    fetchAppointments();
+  }, []);
+
+  const fetchAppointments = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await axios.get(
+        "http://localhost:8080/api/admin/appointments",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      setAppointments(response.data);
+    } catch (error) {
+      console.log("Error fetching appointments:", error);
+    }
+  };
 
   const formatFees = (amount, currency) =>
     currency === "INR" ? `₹${amount}` : amount;
 
   // Admin changes appointment status
-  const updateStatus = (id, newStatus) => {
-    const updated = appointments.map((appt) =>
-      appt.id === id ? { ...appt, status: newStatus } : appt
-    );
-    setAppointments(updated);
+  const updateStatus = async (id, newStatus) => {
+    try {
+      const token = localStorage.getItem("token");
+
+      await axios.put(
+        `http://localhost:8080/api/admin/appointments/${id}`,
+        { status: newStatus },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      // After updating in DB → refresh list
+      fetchAppointments();
+    } catch (error) {
+      console.log("Error updating status:", error);
+    }
   };
 
   const getBadgeColor = (status) => {
-    if (status === "active") return "bg-warning";
-    if (status === "completed") return "bg-success";
-    if (status === "cancelled") return "bg-danger";
+    if (status === "Active") return "bg-warning";
+    if (status === "Completed") return "bg-success";
+    if (status === "Cancelled") return "bg-danger";
+    return "bg-secondary";
   };
 
   return (
@@ -72,24 +79,25 @@ const AllAppointmentsAdmin = () => {
 
           <tbody>
             {appointments.map((appt) => (
-              <tr key={appt.id}>
+              <tr key={appt._id}>
                 <td>
-                  {appt.date} <br />
-                  <small>{appt.time}</small>
+                  {new Date(appt.date).toLocaleDateString()}
+                  <br />
+                  <small>{appt.timeSlot}</small>
                 </td>
 
                 <td>
-                  <strong>{appt.patient.name}</strong>
+                  <strong>{appt.user?.name}</strong>
                   <br />
-                  <small>Age: {appt.patient.age}</small>
+                  <small>Age: {appt.user?.age || "N/A"}</small>
                   <br />
-                  <small>📞 {appt.patient.phone}</small>
+                  <small>📞 {appt.user?.phone}</small>
                 </td>
 
-                <td>{appt.doctor.name}</td>
-                <td>{appt.doctor.speciality}</td>
+                <td>{appt.doctor?.name}</td>
+                <td>{appt.speciality}</td>
 
-                <td>{formatFees(appt.fees, appt.currency)}</td>
+                <td>₹{appt.charge}</td>
 
                 <td>
                   <span className={`badge ${getBadgeColor(appt.status)}`}>
@@ -101,21 +109,21 @@ const AllAppointmentsAdmin = () => {
                   <div className="d-flex gap-2">
                     <button
                       className="btn btn-success btn-sm"
-                      onClick={() => updateStatus(appt.id, "completed")}
+                      onClick={() => updateStatus(appt._id, "Completed")}
                     >
                       Complete
                     </button>
 
                     <button
                       className="btn btn-danger btn-sm"
-                      onClick={() => updateStatus(appt.id, "cancelled")}
+                      onClick={() => updateStatus(appt._id, "Cancelled")}
                     >
                       Cancel
                     </button>
 
                     <button
                       className="btn btn-warning btn-sm"
-                      onClick={() => updateStatus(appt.id, "active")}
+                      onClick={() => updateStatus(appt._id, "Active")}
                     >
                       Activate
                     </button>

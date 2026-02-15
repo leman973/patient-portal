@@ -43,8 +43,8 @@ const AllDoctors = () => {
     fetchDoctors();
   }, [speciality]);
 
-  if(loader){
-    return <Loader></Loader>
+  if (loader) {
+    return <Loader></Loader>;
   }
 
   return (
@@ -107,7 +107,7 @@ const AllDoctors = () => {
                     alt={doc.name}
                     className="card-img-top"
                     style={{
-                      height: "180px", 
+                      height: "180px",
                       width: "100%",
                       objectFit: "contain",
                       objectPosition: "center",

@@ -14,7 +14,7 @@ export default function Navbar() {
     const token = localStorage.getItem("token");
     if (!token) return;
 
-    setLoader(true)
+    setLoader(true);
 
     const fetchUserDetails = async () => {
       try {
@@ -27,9 +27,8 @@ export default function Navbar() {
         setLoader(false);
       } catch (error) {
         console.error("Failed to fetch user details", error);
-        setLoader(false)
+        setLoader(false);
       }
-
     };
 
     fetchUserDetails();
@@ -53,7 +52,6 @@ export default function Navbar() {
         <NavLink className="navbar-brand fw-bold text-success" to="/home">
           🏥 CarePlus Clinic
         </NavLink>
-
 
         <button
           className="navbar-toggler"
@@ -111,19 +109,35 @@ export default function Navbar() {
               </NavLink>
             </li>
             {role === "ADMIN" && (
-              <li className="nav-item">
-                <NavLink
-                  to="/admin/doctors_records"
-                  className="btn btn-sm btn-danger text-white fw-bold mx-2"
-                  style={{
-                    borderRadius: "5px",
-                    padding: "0.25rem 0.5rem", 
-                    marginTop: "2px"    
-                  }}
-                >
-                  Admin Panel
-                </NavLink>
-              </li>
+              <>
+                <li className="nav-item">
+                  <NavLink
+                    to="/admin/doctors_records"
+                    className="btn btn-sm btn-danger text-white fw-bold mx-2"
+                    style={{
+                      borderRadius: "5px",
+                      padding: "0.25rem 0.5rem",
+                      marginTop: "2px",
+                    }}
+                  >
+                    Admin Panel
+                  </NavLink>
+                </li>
+
+                <li className="nav-item">
+                  <NavLink
+                    to="/admin/appointments"
+                    className="btn btn-sm btn-primary text-white fw-bold mx-2"
+                    style={{
+                      borderRadius: "5px",
+                      padding: "0.25rem 0.5rem",
+                      marginTop: "2px",
+                    }}
+                  >
+                    All Appointments
+                  </NavLink>
+                </li>
+              </>
             )}
           </ul>
         </div>
@@ -132,65 +146,68 @@ export default function Navbar() {
         <div className="d-flex align-items-center ms-lg-3">
           {!user ? (
             <>
-              <NavLink to="/login" className="btn btn-info text-white fw-bold me-2">
+              <NavLink
+                to="/login"
+                className="btn btn-info text-white fw-bold me-2"
+              >
                 Login
               </NavLink>
               <NavLink to="/signup" className="btn btn-info text-white fw-bold">
                 Register
               </NavLink>
             </>
-          ) : (<div className="dropdown">
-            <button
-              className="btn p-0 border-0 bg-transparent dropdown-toggle d-flex align-items-center"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              {user.avatar ? (
-                <img
-                  src={user.avatar}
-                  alt="profile"
-                  className="rounded-circle"
-                  width="40"
-                  height="40"
-                />
-              ) : (
-                <div
-                  className="rounded-circle d-flex align-items-center justify-content-center bg-light shadow"
-                  style={{ width: "40px", height: "40px" }}
-                >
-                  <FaUser size={20} />
-                </div>
-              )}
-            </button>
+          ) : (
+            <div className="dropdown">
+              <button
+                className="btn p-0 border-0 bg-transparent dropdown-toggle d-flex align-items-center"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                {user.avatar ? (
+                  <img
+                    src={user.avatar}
+                    alt="profile"
+                    className="rounded-circle"
+                    width="40"
+                    height="40"
+                  />
+                ) : (
+                  <div
+                    className="rounded-circle d-flex align-items-center justify-content-center bg-light shadow"
+                    style={{ width: "40px", height: "40px" }}
+                  >
+                    <FaUser size={20} />
+                  </div>
+                )}
+              </button>
 
-            <ul className="dropdown-menu dropdown-menu-end shadow">
-              <li className="px-3 py-2 fw-bold text-success">
-                {user.name}
-              </li>
-              <li><hr className="dropdown-divider" /></li>
-              <li>
-                <Link className="dropdown-item" to="/profile">
-                  My Profile
-                </Link>
-              </li>
-              <li>
-                <Link className="dropdown-item" to="/my-appointments">
-                  My Bookings
-                </Link>
-              </li>
-              <li>
-                <button
-                  className="dropdown-item text-danger"
-                  onClick={handleLogout}
-                >
-                  Logout
-                </button>
-
-              </li>
-            </ul>
-          </div>)}
+              <ul className="dropdown-menu dropdown-menu-end shadow">
+                <li className="px-3 py-2 fw-bold text-success">{user.name}</li>
+                <li>
+                  <hr className="dropdown-divider" />
+                </li>
+                <li>
+                  <Link className="dropdown-item" to="/profile">
+                    My Profile
+                  </Link>
+                </li>
+                <li>
+                  <Link className="dropdown-item" to="/my-appointments">
+                    My Bookings
+                  </Link>
+                </li>
+                <li>
+                  <button
+                    className="dropdown-item text-danger"
+                    onClick={handleLogout}
+                  >
+                    Logout
+                  </button>
+                </li>
+              </ul>
+            </div>
+          )}
         </div>
-
       </div>
     </nav>
   );
