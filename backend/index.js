@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const app = express();
 require("dotenv").config();
+const cors = require("cors");
 const connectDB = require("./config/mongoDB");
 const bodyParser = require("body-parser");
 const cors = require("cors");
@@ -24,7 +25,14 @@ connectDB();
 connectCloudinary();
 
 app.use(bodyParser.json());
-app.use(cors());
+
+app.use(cors({
+  origin: [
+    "http://localhost:5173",
+    "https://your-frontend.onrender.com"
+  ],
+  credentials: true
+}));
 
 app.use("/api/auth", authRouter);
 app.use("/api/bookings", BookingRouter);

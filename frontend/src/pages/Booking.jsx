@@ -82,7 +82,7 @@ const Booking = () => {
             setSelectedTimeSlot(null);
             setSelectedSpeciality(null);
 
-            navigate("/bookings");
+            navigate("/my-appointments");
         } catch (error) {
             if (error.response && (error.response.status === 401 || error.response.status === 403)) {
                 localStorage.removeItem("token");
