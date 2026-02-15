@@ -1,4 +1,6 @@
 import { Navigate, Route, Routes } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Home from "./pages/Home";
@@ -46,15 +48,29 @@ function LayoutWithNavbar() {
 
 function App() {
   return (
-    <Routes>
-      {/* Routes WITHOUT navbar */}
-      <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<Signup />} />
-      <Route path="/doctors_records" element={<Doctors_Records />} />
+    <>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
 
-      {/* Routes WITH navbar */}
-      <Route path="/*" element={<LayoutWithNavbar />} />
-    </Routes>
+      <Routes>
+        {/* Routes WITHOUT navbar */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/doctors_records" element={<Doctors_Records />} />
+
+        {/* Routes WITH navbar */}
+        <Route path="/*" element={<LayoutWithNavbar />} />
+      </Routes>
+    </>
   );
 }
 

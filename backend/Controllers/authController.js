@@ -42,7 +42,7 @@ const login = async (req, res) => {
         }
 
         const jwtToken = jwt.sign(
-            { email: user.email, userId: user._id },
+            { email: user.email, userId: user._id, userRole: user.role},
             process.env.JWT_SECRET,
             { expiresIn: '24h' }
         )
@@ -53,7 +53,7 @@ const login = async (req, res) => {
                 success: true,
                 jwtToken,
                 email: user.email,
-                userId: user._id,
+                userRole: user.role,
             })
     } catch (error) {
         console.log("Signup error:", error);

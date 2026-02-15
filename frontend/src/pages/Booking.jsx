@@ -111,7 +111,7 @@ const Booking = () => {
                     axios.get("http://localhost:8080/api/bookings", {
                         headers: { Authorization: `Bearer ${token}` }
                     }),
-                    axios.get("http://localhost:8080/api/doctors", {
+                    axios.get("http://localhost:8080/api/appt-doctors", {
                         headers: { Authorization: `Bearer ${token}` }
                     })
                 ]);
@@ -120,7 +120,7 @@ const Booking = () => {
                 setAllDoctors(doctorRes.data);
 
                 if (id) {
-                    const doc = doctorRes.data.find(d => d.id === Number(id));
+                    const doc = doctorRes.data.find(d => d._id === id);
                     if (doc) setSelectedDoc(doc);
                 }
 

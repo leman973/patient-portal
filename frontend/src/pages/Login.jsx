@@ -1,13 +1,24 @@
 import axios from "axios";
-import React, { useState } from "react";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import { toast } from "react-toastify";
+
 
 export default function Login() {
+  const location = useLocation();
   const navigate = useNavigate();
+  const errorMessage = location.state?.error;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  useEffect(() => {
+    if (errorMessage) {
+      toast.error(errorMessage);
+
+      window.history.replaceState({}, document.title);
+    }
+  }, [errorMessage]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,7 +35,9 @@ export default function Login() {
       })
       const data = res.data;
       const token = data.jwtToken;
+      const userRole = data.userRole
       localStorage.setItem("token", token);
+      localStorage.setItem("userRole", userRole);
 
       toast.success(res.data.message || "Login successful");
       navigate("/home");
@@ -126,27 +139,8 @@ export default function Login() {
               Signup
             </a>
           </p>
-
-          {/* Toast notifications */}
-          <ToastContainer
-            position="top-right"
-            autoClose={3000}
-            hideProgressBar={false}
-          />
         </div>
       </div>
-
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
     </div>
   );
 }

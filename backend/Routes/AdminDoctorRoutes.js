@@ -3,11 +3,12 @@ const router = express.Router();
 const ensureAuthenticated = require("../Middlewares/Auth");
 const upload = require("../Middlewares/mutler");
 const { addDoctor, getDoctors, deleteDoctor } = require("../Controllers/AdminDoctorController");
+const adminAcessOnly = require("../Middlewares/adminAccessOnly");
 
-router.get("/",ensureAuthenticated,getDoctors);
+router.get("/",ensureAuthenticated,adminAcessOnly,getDoctors);
 
-router.post("/",ensureAuthenticated,upload.single("image"), addDoctor);
+router.post("/",ensureAuthenticated,adminAcessOnly,upload.single("image"), addDoctor);
 
-router.delete("/:id",ensureAuthenticated,deleteDoctor);
+router.delete("/:id",ensureAuthenticated,adminAcessOnly,deleteDoctor);
 
 module.exports = router;

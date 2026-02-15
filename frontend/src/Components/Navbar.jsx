@@ -8,6 +8,7 @@ import Loader from "./Loader";
 export default function Navbar() {
   const [user, setUser] = useState(null);
   const [loader, setLoader] = useState(false);
+  const role = localStorage.getItem("userRole");
   const navigate = useNavigate();
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -36,12 +37,12 @@ export default function Navbar() {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    localStorage.removeItem("userId");;
+    localStorage.removeItem("userRole");
     setUser(null);
     navigate("/home");
   };
 
-  if(loader){
+  if (loader) {
     return <Loader></Loader>;
   }
 
@@ -109,6 +110,21 @@ export default function Navbar() {
                 Contact Us
               </NavLink>
             </li>
+            {role === "ADMIN" && (
+              <li className="nav-item">
+                <NavLink
+                  to="/admin/doctors_records"
+                  className="btn btn-sm btn-danger text-white fw-bold mx-2"
+                  style={{
+                    borderRadius: "5px",
+                    padding: "0.25rem 0.5rem", 
+                    marginTop: "2px"    
+                  }}
+                >
+                  Admin Panel
+                </NavLink>
+              </li>
+            )}
           </ul>
         </div>
 

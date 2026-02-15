@@ -29,7 +29,7 @@ app.use("/api/bookings", BookingRouter);
 app.use("/api/me", userDetailsRouter);
 app.use("/api/profile", profileRouter);
 app.use("/api/contact", ContactRouter);
-app.use("/api/doctors",doctorUserRoute)
+app.use("/api/appt-doctors",doctorUserRoute)
 app.use("/api/admin/doctors", doctorRoutes);
 app.use("/api/myAppointments",myAppointments)
 app.use("/api/doctors", allDoctorRoutes);

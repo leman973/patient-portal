@@ -59,7 +59,10 @@ export default function DoctorManagement() {
         (err.response.status === 401 || err.response.status === 403)
       ) {
         localStorage.removeItem("token");
-        navigate("/login");
+
+        navigate("/login", {
+          state: { error: err.response.data.message },
+        });
       } else {
         console.error(err);
         setLoading(false);
@@ -113,7 +116,7 @@ export default function DoctorManagement() {
       });
 
       alert("Doctor Added Successfully ");
-      fetchDoctors();
+      fetchDoctors(token);
 
       setFormData({
         name: "",
@@ -128,11 +131,22 @@ export default function DoctorManagement() {
       setPreview(null);
     } catch (err) {
       console.error(err);
-      alert("Error adding doctor ");
+      if (
+        err.response &&
+        (err.response.status === 401 || err.response.status === 403)
+      ) {
+        localStorage.removeItem("token");
+        navigate("/login", {
+          state: { error: err.response.data.message || "Access Denied" },
+        });
+      } else {
+        alert("Error adding doctor");
+      }
     } finally {
       setAddLoading(false);
     }
   };
+
 
   // Delete Doctor
   const deleteDoctor = async () => {
@@ -154,16 +168,21 @@ export default function DoctorManagement() {
       setSelectedId("");
     } catch (err) {
       console.error(err);
+
       if (
         err.response &&
         (err.response.status === 401 || err.response.status === 403)
       ) {
         localStorage.removeItem("token");
-        navigate("/login");
+
+        navigate("/login", {
+          state: { error: err.response.data.message },
+        });
       } else {
         alert("Error deleting doctor");
       }
     }
+
   };
 
   if (loading) {
