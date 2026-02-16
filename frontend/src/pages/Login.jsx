@@ -3,6 +3,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
+import { Link } from "react-router-dom"
+import heartIcon from "../assets/Heart-icon.png";
 
 
 export default function Login() {
@@ -78,9 +80,18 @@ export default function Login() {
             e.currentTarget.style.boxShadow = "0 6px 12px rgba(0,0,0,0.1)";
           }}
         >
-          <h3 className="text-center mb-4" style={{ color: "#333" }}>
-            🏥 Patient Portal Login
+          <h3
+            className="text-center mb-4 d-flex justify-content-center align-items-center gap-2"
+            style={{ color: "#333" }}
+          >
+            <img
+              src={heartIcon}
+              alt="CarePlus"
+              style={{ width: "30px", height: "30px", objectFit: "contain" }}
+            />
+            CarePlus Clinic Login
           </h3>
+
 
           <form onSubmit={handleSubmit} style={{ fontSize: "0.9rem" }}>
             <div className="mb-3">
@@ -151,9 +162,9 @@ export default function Login() {
 
           <p className="text-center mt-3" style={{ color: "#555" }}>
             Don't have an account?{" "}
-            <a href="/signup" style={{ color: "#4CAF50", fontWeight: "bold" }}>
+            <Link to="/signup" style={{ color: "#4CAF50", fontWeight: "bold" }}>
               Signup
-            </a>
+            </Link>
           </p>
         </div>
       </div>

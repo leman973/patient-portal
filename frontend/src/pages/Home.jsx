@@ -11,6 +11,7 @@ import neurologist from "../assets/Neurologist.png";
 import dermatologist from "../assets/Dermatologist.png";
 import pediatrician from "../assets/Pediatricians.png";
 import gastro from "../assets/gastro.png";
+import Gynecologist from "../assets/Gynecologist.png";
 
 const specialists = [
   { name: "General Physician", icon: physician },
@@ -18,6 +19,7 @@ const specialists = [
   { name: "Dermatologist", icon: dermatologist },
   { name: "Pediatrician", icon: pediatrician },
   { name: "Gastroenterologist", icon: gastro },
+  { name: "Gynecologist", icon: Gynecologist },
 ];
 
 export default function Home() {

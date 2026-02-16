@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import { FaUser } from "react-icons/fa";
 import Loader from "./Loader";
+import heartIcon from "../assets/Heart-icon.png";
 
 export default function Navbar() {
   const [user, setUser] = useState(null);
@@ -49,9 +50,15 @@ export default function Navbar() {
     <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
       <div className="container d-flex align-items-center justify-content-between">
         {/* Left: Logo */}
-        <NavLink className="navbar-brand fw-bold text-success" to="/home">
-          🏥 CarePlus Clinic
+        <NavLink className="navbar-brand fw-bold text-success d-flex align-items-center gap-2" to="/home">
+          <img
+            src={heartIcon}
+            alt="CarePlus"
+            style={{ width: "30px", height: "30px", objectFit: "contain" }}
+          />
+          CarePlus Clinic
         </NavLink>
+
 
         <div className="d-flex align-items-center order-lg-3">
           {!user ? (

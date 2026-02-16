@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Link } from "react-router-dom"
+import heartIcon from "../assets/Heart-icon.png";
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -71,8 +73,16 @@ export default function Signup() {
             e.currentTarget.style.boxShadow = "0 6px 12px rgba(0,0,0,0.1)";
           }}
         >
-          <h3 className="text-center mb-4" style={{ color: "#333" }}>
-            🏥 Patient Registration
+          <h3
+            className="text-center mb-4 d-flex justify-content-center align-items-center gap-2"
+            style={{ color: "#333" }}
+          >
+            <img
+              src={heartIcon}
+              alt="CarePlus"
+              style={{ width: "30px", height: "30px", objectFit: "contain" }}
+            />
+            CarePlus Clinic Registrstion
           </h3>
 
           <form onSubmit={handleSubmit} style={{ fontSize: "0.9rem" }}>
@@ -173,7 +183,7 @@ export default function Signup() {
               }}
               onMouseOver={(e) => (e.target.style.transform = "scale(1.05)")}
               onMouseOut={(e) => (e.target.style.transform = "scale(1)")}
-              disabled={loader} 
+              disabled={loader}
             >
               {loader ? (
                 <div
@@ -192,9 +202,9 @@ export default function Signup() {
 
           <p className="text-center mt-3" style={{ color: "#555" }}>
             Already have an account?{" "}
-            <a href="/login" style={{ color: "#4CAF50", fontWeight: "bold" }}>
+            <Link to="/login" style={{ color: "#4CAF50", fontWeight: "bold" }}>
               Login
-            </a>
+            </Link>
           </p>
         </div>
       </div>

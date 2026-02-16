@@ -16,14 +16,18 @@ const specialities = [
 
 const AllDoctors = () => {
   const [filteredDocs, setFilteredDocs] = useState([]);
-  const [loader, setLoader] = useState(true);
+  const [initialLoading, setInitialLoading] = useState(true);
+  const [listLoading, setListLoading] = useState(false);
   const [activeSpec, setActiveSpec] = useState("All Doctors");
 
   const { speciality } = useParams();
   const navigate = useNavigate();
 
-  const fetchDoctors = async () => {
+  const fetchDoctors = async (isInitial = false) => {
     try {
+      if (isInitial) setInitialLoading(true);
+      else setListLoading(true);
+
       let url = `${import.meta.env.VITE_API_URL}/api/doctors`;
 
       if (speciality && speciality !== "All Doctors") {
@@ -32,19 +36,24 @@ const AllDoctors = () => {
 
       const response = await axios.get(url);
       setFilteredDocs(response.data);
-      setLoader(false);
     } catch (error) {
       console.log("Error fetching doctors:", error);
-      setLoader(false);
+    } finally {
+      setInitialLoading(false);
+      setListLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchDoctors();
+    fetchDoctors(true);
+  }, []);
+
+  useEffect(() => {
+    if (!initialLoading) fetchDoctors(false);
   }, [speciality]);
 
-  if (loader) {
-    return <Loader></Loader>;
+  if (initialLoading) {
+    return <Loader />;
   }
 
   return (
@@ -77,64 +86,68 @@ const AllDoctors = () => {
 
         {/* Doctors Cards */}
         <div className="flex-grow-1">
-          <div className="d-flex flex-wrap gap-3 justify-content-center justify-content-md-start">
-            {filteredDocs.map((doc) => (
-              <Card
-                key={doc.id}
-                className="w-100 border-0"
-                style={{ maxWidth: "17rem" }}
-              >
-                <div
-                  className="card shadow-sm text-center"
-                  style={{
-                    borderRadius: "15px",
-                    transition: "0.3s",
-                    overflow: "hidden",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = "translateY(-5px)";
-                    e.currentTarget.style.boxShadow =
-                      "0 8px 15px rgba(0,0,0,0.15)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = "translateY(0)";
-                    e.currentTarget.style.boxShadow =
-                      "0 4px 10px rgba(0,0,0,0.1)";
-                  }}
+          {listLoading ? (
+            <Loader inline />
+          ) : (
+            <div className="d-flex flex-wrap gap-3 justify-content-center justify-content-md-start">
+              {filteredDocs.map((doc) => (
+                <Card
+                  key={doc._id}
+                  className="w-100 border-0"
+                  style={{ maxWidth: "17rem" }}
                 >
-                  <img
-                    src={doc.image}
-                    alt={doc.name}
-                    className="card-img-top"
+                  <div
+                    className="card shadow-sm text-center"
                     style={{
-                      height: "180px",
-                      width: "100%",
-                      objectFit: "contain",
-                      objectPosition: "center",
-                      padding: "10px",
-                      backgroundColor: "#f8f9fa",
+                      borderRadius: "15px",
+                      transition: "0.3s",
+                      overflow: "hidden",
                     }}
-                  />
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = "translateY(-5px)";
+                      e.currentTarget.style.boxShadow =
+                        "0 8px 15px rgba(0,0,0,0.15)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = "translateY(0)";
+                      e.currentTarget.style.boxShadow =
+                        "0 4px 10px rgba(0,0,0,0.1)";
+                    }}
+                  >
+                    <img
+                      src={doc.image}
+                      alt={doc.name}
+                      className="card-img-top"
+                      style={{
+                        height: "180px",
+                        width: "100%",
+                        objectFit: "contain",
+                        objectPosition: "center",
+                        padding: "10px",
+                        backgroundColor: "#f8f9fa",
+                      }}
+                    />
 
-                  <div className="card-body d-flex flex-column justify-content-center align-items-center p-2">
-                    <h5 className="fw-bold mb-1">{doc.name}</h5>
-                    <p className="text-muted mb-1">{doc.speciality}</p>
-                    <p className="text-muted mb-1">{doc.qualification}</p>
-                    <p className="text-muted mb-1 small">
-                      Experience: {doc.experience}
-                    </p>
+                    <div className="card-body d-flex flex-column justify-content-center align-items-center p-2">
+                      <h5 className="fw-bold mb-1">{doc.name}</h5>
+                      <p className="text-muted mb-1">{doc.speciality}</p>
+                      <p className="text-muted mb-1">{doc.qualification}</p>
+                      <p className="text-muted mb-1 small">
+                        Experience: {doc.experience}
+                      </p>
 
-                    <button
-                      className="btn btn-outline-success mt-2"
-                      onClick={() => navigate(`/bookings/${doc._id}`)}
-                    >
-                      Schedule Appointment
-                    </button>
+                      <button
+                        className="btn btn-outline-success mt-2"
+                        onClick={() => navigate(`/bookings/${doc._id}`)}
+                      >
+                        Schedule Appointment
+                      </button>
+                    </div>
                   </div>
-                </div>
-              </Card>
-            ))}
-          </div>
+                </Card>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </section>
