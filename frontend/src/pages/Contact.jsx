@@ -103,12 +103,12 @@ const Contact = () => {
 
                 <div className="mb-3">
                   <h6 className="fw-bold mb-1">📞 Phone</h6>
-                  <p className="mb-0">+91 98765 43210</p>
+                  <p className="mb-0">+91 XXXXX XXXXX</p>
                 </div>
 
                 <div>
                   <h6 className="fw-bold mb-1">📧 Email</h6>
-                  <p className="mb-0">support@careplusclinic.com</p>
+                  <p className="mb-0">support@careplusclinic.example</p>
                 </div>
               </div>
             </div>

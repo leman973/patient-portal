@@ -66,7 +66,9 @@ export default function Login() {
         <div
           className="card shadow-lg p-4"
           style={{
-            minWidth: "380px",
+            width: "100%",      
+            maxWidth: "400px",      
+            margin: "0 1rem",      
             borderRadius: "15px",
             backgroundColor: "#ffffff",
             transition: "transform 0.3s ease, box-shadow 0.3s ease",
